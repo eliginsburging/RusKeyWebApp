@@ -23,6 +23,9 @@ class Verb(models.Model):
     past_pl = models.CharField('plural past', max_length=30)
     audio_file = models.CharField(max_length=40)
 
+    def __str__(self):
+        return self.infinitive
+
 
 class Example(models.Model):
     verb = models.ForeignKey(Verb, on_delete=models.CASCADE)
@@ -30,6 +33,8 @@ class Example(models.Model):
     translation_text = models.CharField(max_length=250)
     example_audio = models.CharField(max_length=40)
 
+    def __str__(self):
+        return self.translation_text
 
 class PerformancePerExample(models.Model):
     example = models.ForeignKey(Example, on_delete=models.CASCADE)
