@@ -1,5 +1,6 @@
 from django.shortcuts import render
 from django.http import HttpResponse
+from django.contrib.auth.decorators import login_required
 from .models import Verb, Example, PerformancePerExample
 
 # Create your views here.
@@ -16,3 +17,7 @@ def index(request):
         'ruskeyverbs/index.html',
         context={'num_verbs': num_verbs, 'num_examples': num_examples}
     )
+
+
+# @login_required
+# def verb_list(request):

@@ -15,19 +15,29 @@
     <div class="container-fluid">
       <div class="row">
         <div class="col-sm-12">
-          {% block navbar %}
+
           <nav class="navbar navbar-expand navbar navbar-dark bg-dark">
             <a class="navbar-brand" href="{% url 'index' %}">Ruskey</a><!--put image here?-->
+            {% block navbar %}
             <ul class="navbar-nav">
+              {% if user.is_authenticated %}
               <li class="nav-item">
-                <a class="nav-link" href="{% url 'login' %}">Log in</a>
+                <span class="navbar-text"><strong>Current User: {{ user.get_username }}</strong></span>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="{% url 'logout' %}">Log Out</a>
+              </li>
+              {% else %}
+              <li class="nav-item">
+                <a class="nav-link" href="{% url 'login' %}">Log In</a>
               </li>
               <li class="nav-item">
                 <a class="nav-link" href="">Register</a>
               </li>
+              {% endif %}
+              {% endblock %}
             </ul>
           </nav>
-          {% endblock %}
         </div> <!-- /col-sm-12 -->
       </div> <!--/row -->
       <div class="row">
