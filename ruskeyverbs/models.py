@@ -1,4 +1,5 @@
 from django.db import models
+from django.contrib.auth.models import User
 
 # Create your models here.
 
@@ -36,9 +37,10 @@ class Example(models.Model):
     def __str__(self):
         return self.translation_text
 
+
 class PerformancePerExample(models.Model):
     example = models.ForeignKey(Example, on_delete=models.CASCADE)
-    user = models.CharField(max_length=25)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
     easiness_factor = models.DecimalField(max_digits=5, decimal_places=2)
     last_interval = models.PositiveSmallIntegerField()
     date_last_studied = models.DateField(auto_now=True)
