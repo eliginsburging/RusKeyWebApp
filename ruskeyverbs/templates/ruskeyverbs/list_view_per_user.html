@@ -1,0 +1,17 @@
+{% extends "ruskeyverbs/base_generic.html" %}
+
+{% block content %}
+  <h1>Verbs</h1>
+
+  {% if verb_list %}
+  <ul>
+    {% for verbinst in verb_list %}
+    <li class="{% if verbinst.is_overdue %}text-danger{% endif %}">
+      <a href="">{{ verbinst.infinitive }}</a> {{ verbinst.get_earliest_due_date }}
+    </li>
+    {% endfor %}
+  </ul>
+  {% else %}
+    <p>No verbs to display!</p>
+  {% endif %}
+{% endblock %}

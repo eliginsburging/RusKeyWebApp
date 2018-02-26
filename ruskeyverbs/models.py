@@ -1,6 +1,8 @@
 from django.db import models
 from django.contrib.auth.models import User
-
+from django.utils import timezone
+from django.core.exceptions import ObjectDoesNotExist
+import datetime
 # Create your models here.
 
 
@@ -27,6 +29,23 @@ class Verb(models.Model):
     def __str__(self):
         return self.infinitive
 
+    def get_earliest_due_date(self, my_user):
+        examples = self.example_set.all()
+        date_list = []
+        for my_example in examples:
+            try:
+                my_due_date = my_example.performanceperexample_set.filter(user=my_user)[0].due_date
+                date_list.append(my_due_date)
+            except ObjectDoesNotExist:
+                pass
+        if date_list:
+            return min(date_list)
+        else:
+            return False
+
+    def is_overdue(self, my_user):
+        return self.get_earliest_due_date(my_user) < datetime.date.today()
+
 
 class Example(models.Model):
     verb = models.ForeignKey(Verb, on_delete=models.CASCADE)
@@ -45,3 +64,6 @@ class PerformancePerExample(models.Model):
     last_interval = models.PositiveSmallIntegerField()
     date_last_studied = models.DateField(auto_now=True)
     due_date = models.DateField()
+
+    def __str__(self):
+        return self.due_date

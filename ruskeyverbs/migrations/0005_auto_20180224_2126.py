@@ -13,18 +13,18 @@ def populate_user(apps, schema_editor):
     my_user = user_model.objects.get(pk=1)
     dictkey = 0
     object_dict = {}
-    for i in range(example_model.objects.all().count()):
+    for i in range(1, example_model.objects.all().count()+1):
         my_example = example_model.objects.get(id=i)
         random_int = random.randint(1, 10)
-        random_int_days = random.randint(1, 5)
-        study_date = timezone.now() - datetime.timedelta(days=random_int_days)
-        due_date = study_date + datetime.timedelta(days=random_int)
-        object_dict[dictkey] = performance_model(my_example,
-                                                 my_user,
-                                                 2.5,
-                                                 random_int,
-                                                 study_date,
-                                                 due_date)
+        random_int_days = random.randint(-5, -1)
+        study_date = timezone.now() + datetime.timedelta(days=random_int_days)
+        my_due_date = study_date + datetime.timedelta(days=random_int)
+        object_dict[dictkey] = performance_model(example=my_example,
+                                                 user=my_user,
+                                                 easiness_factor=2.5,
+                                                 last_interval=random_int,
+                                                 date_last_studied=study_date,
+                                                 due_date=my_due_date)
         object_dict[dictkey].save()
         dictkey += 1
 
