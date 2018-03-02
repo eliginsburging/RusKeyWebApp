@@ -4,10 +4,11 @@
   <h1>Verbs</h1>
 
   {% if verb_list %}
+  {% load ruskeyverbs_extras %}
   <ul>
     {% for verbinst in verb_list %}
-    <li class="{% if verbinst.is_overdue %}text-danger{% endif %}">
-      <a href="">{{ verbinst.infinitive }}</a> {{ verbinst.get_earliest_due_date }}
+    <li class="{% if verbinst|overdue:current_user %}text-danger{% endif %}">
+      <a href="{% url 'verb-details' verbinst.pk %}">{{ verbinst.infinitive }}</a> {{ verbinst|duedate:current_user }}
     </li>
     {% endfor %}
   </ul>

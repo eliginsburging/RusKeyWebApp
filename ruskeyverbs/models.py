@@ -32,19 +32,38 @@ class Verb(models.Model):
     def get_earliest_due_date(self, my_user):
         examples = self.example_set.all()
         date_list = []
+        future_date = datetime.date.today() + datetime.timedelta(weeks=9999)
         for my_example in examples:
             try:
                 my_due_date = my_example.performanceperexample_set.filter(user=my_user)[0].due_date
                 date_list.append(my_due_date)
             except ObjectDoesNotExist:
-                pass
+                date_list.append(future_date)
+            except IndexError:
+                date_list.append(future_date)
         if date_list:
             return min(date_list)
-        else:
-            return False
 
     def is_overdue(self, my_user):
         return self.get_earliest_due_date(my_user) < datetime.date.today()
+
+    def due_date_for_display(self, my_user):
+        examples = self.example_set.all()
+        date_list = []
+        future_date = datetime.date.today() + datetime.timedelta(weeks=9999)
+        for my_example in examples:
+            try:
+                my_due_date = my_example.performanceperexample_set.filter(user=my_user)[0].due_date
+                date_list.append(my_due_date)
+            except ObjectDoesNotExist:
+                date_list.append(future_date)
+            except IndexError:
+                date_list.append(future_date)
+        if date_list:
+            if min(date_list) == future_date:
+                return "Not studied yet"
+            else:
+                return min(date_list)
 
 
 class Example(models.Model):

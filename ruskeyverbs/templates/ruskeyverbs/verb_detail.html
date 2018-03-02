@@ -1,0 +1,7 @@
+{% extends "ruskeyverbs/base_generic.html" %}
+
+{% block content %}
+  <h1><a href="{% url 'my-verbs' %}">{{ verb.infinitive}}</a></h1>
+  <p><strong>Infintive:</strong>{{ verb.infinitive }}</p>
+  <p><strong>Meaning:</strong>{{ verb.meaning }}</p>
+{% endblock %}

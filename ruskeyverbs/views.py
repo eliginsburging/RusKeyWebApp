@@ -21,14 +21,29 @@ def index(request):
     )
 
 
-class VerbListPerUser(LoginRequiredMixin, generic.ListView):
+@login_required
+def VerbListPerUser(request):
+    sorted_verb_list = sorted(Verb.objects.all(),
+                              key=lambda a: a.get_earliest_due_date(request.user))
+    current_user = request.user
+    return render(
+        request,
+        'ruskeyverbs/list_view_per_user.html',
+        context={'verb_list': sorted_verb_list, 'current_user': current_user}
+    )
+
+
+class VerbDetails(LoginRequiredMixin, generic.DetailView):
     model = Verb
-    template_name = 'ruskeyverbs/list_view_per_user.html'
 
-
-    def get_queryset(self):
-        print(sorted(Verb.objects.all(), key=lambda a: a.get_earliest_due_date(self.request.user)))
-        return sorted(Verb.objects.all(), key=lambda a: a.get_earliest_due_date(self.request.user))
-
+# class VerbListPerUser(LoginRequiredMixin, generic.ListView):
+#     model = Verb
+#     template_name = 'ruskeyverbs/list_view_per_user.html'
+#
+#
+#     def get_queryset(self):
+#         print(sorted(Verb.objects.all(), key=lambda a: a.get_earliest_due_date(self.request.user)))
+#         return sorted(Verb.objects.all(), key=lambda a: a.get_earliest_due_date(self.request.user))
+#
         # Verb.objects.filter(
         #     example__performanceperexample__user=self.request.user).order_by('example__performanceperexample__due_date').distinct()
