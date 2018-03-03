@@ -1,10 +1,129 @@
 {% extends "ruskeyverbs/base_generic.html" %}
 
 {% block content %}
-  <h1><a href="{% url 'my-verbs' %}">{{ verb.infinitive}}</a></h1>
-  <p><strong>Infintive:</strong>{{ verb.infinitive }}</p>
-  <p><strong>Meaning:</strong>{{ verb.meaning }}</p>
-  {% for example in verb.example_set.all %}
-    <p>{{ example.russian_text }}</p>
-  {% endfor %}
+{% load static %}
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-sm-12">
+      <h1><a href="{% url 'my-verbs' %}">{{ verb.pk }} - {{ verb.infinitive}}</a></h1>
+      <h3>Conjugation Audio</h3>
+      {% with 'ruskeyverbs/verbAudio/'|add:verb.audio_file as file %}
+      <audio controls>
+        <source src="{% static file %}" type="audio/mpeg"></source>
+      </audio>
+      {% endwith %}
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-sm-6 col-md-4">
+      <h3>General Information</h3>
+      <table class="table table-sm table-bordered">
+        <tr>
+          <th scpoe="row">Infinitive:</th>
+          <td>{{ verb.infinitive }}</td>
+        </tr>
+        <tr>
+          <th scope="row">Meaning:</th>
+          <td>{{ verb.meaning }}</td>
+        </tr>
+        <tr>
+          <th scope="row">Aspect:</th>
+          <td>{{ verb.aspect }}</td>
+        </tr>
+
+      </table>
+      <h3>Non-Past Indicative Forms</h3>
+      <table class="table table-sm table-bordered">
+        <tr>
+          <th scope="row">First person singular:</th>
+          <td>{{ verb.first_sg }}</td>
+        </tr>
+        <tr>
+          <th scope="row">Second person singular:</th>
+          <td>{{ verb.second_sg }}</td>
+        </tr>
+        <tr>
+          <th scope="row">Third person singular:</th>
+          <td>{{ verb.third_sg }}</td>
+        </tr>
+        <tr>
+          <th scope="row">First person plural:</th>
+          <td>{{ verb.first_pl }}</td>
+        </tr>
+        <tr>
+          <th scope="row">Second person plural:</th>
+          <td>{{ verb.second_pl }}</td>
+        </tr>
+        <tr>
+          <th scope="row">Third person plural:</th>
+          <td>{{verb.third_pl }}</td>
+        </tr>
+      </table>
+    </div>
+    <div class="col-sm-6 col-md-4">
+      <h3>Past Indicative Forms</h3>
+      <table class="table table-sm table-bordered">
+        <tr>
+          <th scope="row">Masculine:</th>
+          <td>{{ verb.past_masc }}</td>
+        </tr>
+        <tr>
+          <th scope="row">Feminine:</th>
+          <td>{{ verb.past_fem }}</td>
+        </tr>
+        <tr>
+          <th scope="row">Neuter:</th>
+          <td>{{ verb.past_neut }}</td>
+        </tr>
+        <tr>
+          <th scope="row">Plural:</th>
+          <td>{{ verb.past_pl }}</td>
+        </tr>
+      </table>
+      <h3>Imperative Forms</h3>
+      <table class="table table-sm table-bordered">
+        <tr>
+          <th scope="row">Second person singular:</th>
+          <td>{{ verb.imperative_sg }}</td>
+        </tr>
+        <tr>
+          <th scope="row">Second person plural:</th>
+          <td>{{ verb.imperative_pl }}</td>
+        </tr>
+      </table>
+    </div>
+
+  </div>
+  <div class="row">
+    <div class="col-sm-8 col-md-6">
+      <h3>Examples</h3>
+      <table class="table table-sm table-bordered">
+        <thead>
+          <tr>
+            <th scope="col">Example Sentence</th>
+            <th scope="col">Meaning</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for example in verb.example_set.all %}
+          <tr>
+            <td>{{ example.russian_text }}</td>
+            <td>{{ example.translation_text }}</td>
+          </tr>
+          <tr>
+            <td colspan="2">
+              {% with 'ruskeyverbs/verbAudio/'|add:example.example_audio as conj_file %}
+              <audio controls>
+                <source src="{% static conj_file %}" type="audio/mpeg"></source>
+              </audio>
+              {% endwith %}
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+
+    </div>
+  </div>
+</div>
 {% endblock %}
