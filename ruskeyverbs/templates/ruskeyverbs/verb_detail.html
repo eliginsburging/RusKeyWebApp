@@ -4,4 +4,7 @@
   <h1><a href="{% url 'my-verbs' %}">{{ verb.infinitive}}</a></h1>
   <p><strong>Infintive:</strong>{{ verb.infinitive }}</p>
   <p><strong>Meaning:</strong>{{ verb.meaning }}</p>
+  {% for example in verb.example_set.all %}
+    <p>{{ example.russian_text }}</p>
+  {% endfor %}
 {% endblock %}

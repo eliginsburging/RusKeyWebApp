@@ -23,13 +23,22 @@ def index(request):
 
 @login_required
 def VerbListPerUser(request):
+    # get list of all available verbs sorted by due date for given user
     sorted_verb_list = sorted(Verb.objects.all(),
                               key=lambda a: a.get_earliest_due_date(request.user))
+    # create second list by appending the sorted verbs in groups of three as lists
+    grouped_verb_list = []
+    for i in range(0,len(sorted_verb_list),3):
+        temp_list = []
+        temp_list.append(sorted_verb_list[i])
+        temp_list.append(sorted_verb_list[i+1])
+        temp_list.append(sorted_verb_list[i+2])
+        grouped_verb_list.append(temp_list)
     current_user = request.user
     return render(
         request,
         'ruskeyverbs/list_view_per_user.html',
-        context={'verb_list': sorted_verb_list, 'current_user': current_user}
+        context={'verb_list': grouped_verb_list, 'current_user': current_user}
     )
 
 
