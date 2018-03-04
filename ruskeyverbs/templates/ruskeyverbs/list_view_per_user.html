@@ -11,12 +11,12 @@
 
   {% if verb_list %}
   {% load ruskeyverbs_extras %}
-  <div class="container-fluid">
+  <div class="container">
   {% for verb_one, verb_two, verb_three in verb_list %}
   <div class="row">
     <div class="col-sm-4">
       <a href="{% url 'verb-details' verb_one.pk %}">
-        <div class="verb_block">
+        <div class="verb_block col-one-link">
           <h1 class='text-center'>{{ verb_one.pk }}</h1>
           <h2 class='text-center'>{{ verb_one.infinitive }}</h2>
           <p class='text-center'>
@@ -24,7 +24,7 @@
           </p>
           <p class='text-center'>
             due:
-            <span class="{% if verb_one|overdue:current_user %}text-danger{% endif %}">
+            <span class="{% if verb_one|overdue:current_user %}font-weight-bold font-italic text-danger{% endif %}">
               {{ verb_one|duedate:current_user }}
             </span>
           </p>
@@ -33,7 +33,7 @@
     </div>
     <div class="col-sm-4">
       <a href="{% url 'verb-details' verb_two.pk %}">
-        <div class="verb_block">
+        <div class="verb_block col-two-link">
           <h1 class='text-center'>{{ verb_two.pk }}</h1>
           <h2 class='text-center'>{{ verb_two.infinitive }}</h2>
           <p class='text-center'>
@@ -41,7 +41,7 @@
           </p>
           <p class='text-center'>
             due:
-            <span class="{% if verb_two|overdue:current_user %}text-danger{% endif %}">
+            <span class="{% if verb_two|overdue:current_user %}font-weight-bold font-italic text-danger{% endif %}">
               {{ verb_two|duedate:current_user }}
             </span>
           </p>
@@ -50,7 +50,7 @@
     </div>
     <div class="col-sm-4">
       <a href="{% url 'verb-details' verb_three.pk %}">
-        <div class="verb_block">
+        <div class="verb_block col-three-link">
           <h1 class='text-center'>{{ verb_three.pk }}</h1>
           <h2 class='text-center'>{{ verb_three.infinitive }}</h2>
           <p class='text-center'>
@@ -58,7 +58,7 @@
           </p>
           <p class='text-center'>
             due:
-            <span class="{% if verb_three|overdue:current_user %}text-danger{% endif %}">
+            <span class="{% if verb_three|overdue:current_user %}font-weight-bold font-italic text-danger{% endif %}">
               {{ verb_three|duedate:current_user }}
             </span>
           </p>

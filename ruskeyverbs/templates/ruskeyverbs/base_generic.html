@@ -10,7 +10,7 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
     {% block extra_head_content %}
     {% endblock %}
-    <!--{% comment %}{% load static %}{% endcomment %}-->
+    {% load static %}
     <!--{% comment %} insert link <link rel="stylesheet" href="{% static css/styles.css' %}"> if desired{% endcomment %}-->
   </head>
   <body>
@@ -19,25 +19,40 @@
         <div class="col-sm-12">
 
           <nav class="navbar navbar-expand navbar navbar-dark bg-dark">
-            <a class="navbar-brand" href="{% url 'index' %}">Ruskey</a><!--put image here?-->
+            <a class="navbar-brand" href="{% url 'index' %}">
+              <img src="{% static 'ruskeylogo.jpg' %}" alt="Ruskey" width="60" height="60">
+            </a><!--put image here?-->
             {% block navbar %}
+            {% if user.is_authenticated %}
             <ul class="navbar-nav">
-              {% if user.is_authenticated %}
+
+
+              <li class="nav-item">
+                <a class="nav-link" href="{% url 'my-verbs' %}">Verb List</a>
+              </li>
+
+            </ul>
+            <ul class="navbar-nav mx-auto text-right">
               <li class="nav-item">
                 <span class="navbar-text"><strong>Current User: {{ user.get_username }}</strong></span>
               </li>
               <li class="nav-item">
                 <a class="nav-link" href="{% url 'logout' %}">Log Out</a>
               </li>
-              {% else %}
+            </ul>
+
+            {% else %}
+            <ul class="navbar-nav">
+
               <li class="nav-item">
                 <a class="nav-link" href="{% url 'login' %}">Log In</a>
               </li>
               <li class="nav-item">
                 <a class="nav-link" href="">Register</a>
               </li>
-              {% endif %}
-              {% endblock %}
+            </ul>
+            {% endif %}
+            {% endblock %}
             </ul>
           </nav>
         </div> <!-- /col-sm-12 -->

@@ -2,12 +2,14 @@
   margin: 3px;
   border: 2px solid black;
   padding: 2px;
-  background-color: #e6ffff;
+  background-color: #0099ff;
   height: 90%;
 }
 
+
+
 .verb_block:hover {
-  background-color: #ccffff;
+  background-color: #33adff;
 }
 
 a {

@@ -5,7 +5,8 @@
 <div class="container-fluid">
   <div class="row">
     <div class="col-sm-12">
-      <h1><a href="{% url 'my-verbs' %}">{{ verb.pk }} - {{ verb.infinitive}}</a></h1>
+      <br>
+      <h1>{{ verb.pk }} - {{ verb.infinitive}}</h1>
       <h3>Conjugation Audio</h3>
       {% with 'ruskeyverbs/verbAudio/'|add:verb.audio_file as file %}
       <audio controls>
@@ -122,7 +123,7 @@
           {% endfor %}
         </tbody>
       </table>
-
+      <a href="{% url 'my-verbs' %}" class="btn btn-primary">Return to List</a>
     </div>
   </div>
 </div>
