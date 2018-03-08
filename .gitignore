@@ -1,5 +1,3 @@
 RusKey/settings_secret.py
 db.sqlite3
-ruskeyverbs/__pycache__/
-db.sqlite3
-ruskeyverbs/__pycache__/
+__pycache__/
