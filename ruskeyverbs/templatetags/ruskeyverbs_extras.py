@@ -11,4 +11,4 @@ def overdue(my_verb, my_user):
 
 @register.filter(name='duedate')
 def due_date(my_verb, my_user):
-    return my_verb.due_date_for_display(my_user)
+    return my_verb.get_earliest_due_date(my_user, display=True)

@@ -12,60 +12,29 @@
   {% if verb_list %}
   {% load ruskeyverbs_extras %}
   <div class="container">
-  {% for verb_one, verb_two, verb_three in verb_list %}
+  {% for verb in verb_list %}
+  {% if forloop.first %}
   <div class="row">
+  {% endif %}
     <div class="col-sm-4">
-      <a href="{% url 'verb-details' verb_one.pk %}">
+      <a href="{% url 'verb-details' verb.pk %}">
         <div class="verb_block col-one-link">
-          <h1 class='text-center'>{{ verb_one.pk }}</h1>
-          <h2 class='text-center'>{{ verb_one.infinitive }}</h2>
+          <h1 class='text-center'>{{ verb.pk }}</h1>
+          <h2 class='text-center'>{{ verb.infinitive }}</h2>
           <p class='text-center'>
-            {{ verb_one.meaning|truncatechars:50 }}
+            {{ verb.meaning|truncatechars:50 }}
           </p>
           <p class='text-center'>
             due:
-            <span class="{% if verb_one|overdue:current_user %}font-weight-bold font-italic text-danger{% endif %}">
-              {{ verb_one|duedate:current_user }}
+            <span class="{% if verb|overdue:current_user %}font-weight-bold font-italic text-danger{% endif %}">
+              {{ verb|duedate:current_user }}
             </span>
           </p>
         </div>
       </a>
     </div>
-    <div class="col-sm-4">
-      <a href="{% url 'verb-details' verb_two.pk %}">
-        <div class="verb_block col-two-link">
-          <h1 class='text-center'>{{ verb_two.pk }}</h1>
-          <h2 class='text-center'>{{ verb_two.infinitive }}</h2>
-          <p class='text-center'>
-            {{ verb_two.meaning|truncatechars:50 }}
-          </p>
-          <p class='text-center'>
-            due:
-            <span class="{% if verb_two|overdue:current_user %}font-weight-bold font-italic text-danger{% endif %}">
-              {{ verb_two|duedate:current_user }}
-            </span>
-          </p>
-        </div>
-      </a>
-    </div>
-    <div class="col-sm-4">
-      <a href="{% url 'verb-details' verb_three.pk %}">
-        <div class="verb_block col-three-link">
-          <h1 class='text-center'>{{ verb_three.pk }}</h1>
-          <h2 class='text-center'>{{ verb_three.infinitive }}</h2>
-          <p class='text-center'>
-            {{ verb_three.meaning|truncatechars:50}}
-          </p>
-          <p class='text-center'>
-            due:
-            <span class="{% if verb_three|overdue:current_user %}font-weight-bold font-italic text-danger{% endif %}">
-              {{ verb_three|duedate:current_user }}
-            </span>
-          </p>
-        </div>
-      </a>
-    </div>
-  </div>
+    {% if forloop.counter|divisibleby:3 %}</div><div class="row">{% endif %}
+    {% if forloop.last %}</div>{% endif %}
   {% endfor %}
 </div>
   {% else %}

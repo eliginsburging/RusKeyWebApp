@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.utils import timezone
+from django.db.models import Min
 from django.core.exceptions import ObjectDoesNotExist
 import datetime
 # Create your models here.
@@ -29,41 +30,22 @@ class Verb(models.Model):
     def __str__(self):
         return self.infinitive
 
-    def get_earliest_due_date(self, my_user):
-        examples = self.example_set.all()
-        date_list = []
+    def get_earliest_due_date(self, my_user, display=False):
+        examples = PerformancePerExample.objects.filter(user=my_user, example__verb=self).aggregate(Min('due_date'))
         future_date = datetime.date.today() + datetime.timedelta(weeks=9999)
-        for my_example in examples:
-            try:
-                my_due_date = my_example.performanceperexample_set.filter(user=my_user)[0].due_date
-                date_list.append(my_due_date)
-            except ObjectDoesNotExist:
-                date_list.append(future_date)
-            except IndexError:
-                date_list.append(future_date)
-        if date_list:
-            return min(date_list)
+        if display:
+            if examples['due_date__min'] == None:
+                return "Not studied yet"
+            else:
+                return examples['due_date__min']
+        else:
+            if examples['due_date__min'] == None:
+                return future_date
+            else:
+                return examples['due_date__min']
 
     def is_overdue(self, my_user):
         return self.get_earliest_due_date(my_user) < datetime.date.today()
-
-    def due_date_for_display(self, my_user):
-        examples = self.example_set.all()
-        date_list = []
-        future_date = datetime.date.today() + datetime.timedelta(weeks=9999)
-        for my_example in examples:
-            try:
-                my_due_date = my_example.performanceperexample_set.filter(user=my_user)[0].due_date
-                date_list.append(my_due_date)
-            except ObjectDoesNotExist:
-                date_list.append(future_date)
-            except IndexError:
-                date_list.append(future_date)
-        if date_list:
-            if min(date_list) == future_date:
-                return "Not studied yet"
-            else:
-                return min(date_list)
 
 
 class Example(models.Model):
