@@ -1,0 +1,36 @@
+{% extends "ruskeyverbs/base_generic.html" %}
+
+{% block content %}
+{% load static %}
+<div class="container">
+  <div class="row">
+    <div class="col-sm-6">
+      <h1>Welcome to RusKey</h1>
+      <img src="{% static 'ruskeylogo.jpg' %}" alt="Ruskey Logo">
+      <br>
+      <br>
+      <p><strong>RusKey</strong> is a free Russian verb quiz app that provides quizzes on the most commonly used Russian verbs.</p>
+      <p>At present, the RusKey quiz app contains the following:</p>
+      <table class="table table-sm table-bordered">
+        <tr>
+          <th scope="row">Verbs:</th>
+          <td>{{ num_verbs }}</td>
+        </tr>
+        <tr>
+          <th scope="row">Examples:</th>
+          <td>{{ num_examples }}</td>
+        </tr>
+      </table>
+      {% if user.is_authenticated %}
+        <a href="{% url 'my-verbs' %}" class="btn btn-primary">Verb List</a>
+      {% else %}
+        <a href="{% url 'login' %}" class="btn btn-primary">Login</a>
+      {% endif %}
+    </div>
+  </div>
+</div>
+
+
+
+
+{% endblock %}
