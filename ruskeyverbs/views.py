@@ -28,7 +28,7 @@ def index(request):
 def VerbListPerUser(request):
     # get list of all available verbs sorted by due date for given user
     verbs_with_due_dates = Verb.objects.annotate(due=Min('example__performanceperexample__due_date', filter=Q(example__performanceperexample__user_id=request.user.pk))).order_by('due').exclude(due=None)
-    verbs_without_due_dates = Verb.objects.annotate(due=Min('example__performanceperexample__due_date', filter=Q(example__performanceperexample__user_id=request.user.pk))).order_by('due').exclude(~Q(due=None))
+    verbs_without_due_dates = Verb.objects.annotate(due=Min('example__performanceperexample__due_date', filter=Q(example__performanceperexample__user_id=request.user.pk))).exclude(~Q(due=None))
     sorted_verb_list = list(chain(verbs_with_due_dates, verbs_without_due_dates))
     # sorted_verb_list = sorted(Verb.objects.all(),
     #                           key=lambda a: a.get_earliest_due_date(request.user))
