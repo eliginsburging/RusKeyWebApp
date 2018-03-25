@@ -41,6 +41,21 @@ class Verb(models.Model):
     def is_overdue(self, my_user):
         return self.get_earliest_due_date(my_user) < datetime.date.today()
 
+    def get_forms_list(self):
+        return [self.infinitive.replace(chr(769),''),
+                self.first_sg.replace(chr(769),''),
+                self.second_sg.replace(chr(769),''),
+                self.third_sg.replace(chr(769),''),
+                self.first_pl.replace(chr(769),''),
+                self.second_pl.replace(chr(769),''),
+                self.third_pl.replace(chr(769),''),
+                self.imperative_sg.replace(chr(769),''),
+                self.imperative_pl.replace(chr(769),''),
+                self.past_masc.replace(chr(769),''),
+                self.past_fem.replace(chr(769),''),
+                self.past_neut.replace(chr(769),''),
+                self.past_pl.replace(chr(769),'')]
+
 
 class Example(models.Model):
     verb = models.ForeignKey(Verb, on_delete=models.CASCADE)

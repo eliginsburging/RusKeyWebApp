@@ -1,0 +1,13 @@
+{% extends "ruskeyverbs/base_generic.html" %}
+
+{% block content %}
+<p>You entered {{ user_input }}</p>
+{% if score == 100 %}
+  <p>That is exactly correct!</p>
+{% elif score > 90 %}
+  <p>That is correct! (Score: {{ score }})</p>
+{% else %}
+  <p>That is incorrect. (Score: {{ score }}) The correct answer is <strong>{{ answer }}</strong></p>
+{% endif %}
+{{ russian_text }}
+{% endblock %}
