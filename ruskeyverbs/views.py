@@ -79,7 +79,6 @@ def FillInTheBlank(request, pk):
         if russian_text_list[i] in verb_inst.get_forms_list():
             answer = russian_text_list[i]
             stressed_answer = russian_text_list_stressed[i]
-    russian_text
     russian_text = russian_text.replace(stressed_answer, '_________')
     russian_text = russian_text.replace(stressed_answer.capitalize(), '_________')
     example_audio_file = example_inst.example_audio
@@ -130,17 +129,20 @@ def ArrangeWords(request, pk):
     example_inst = get_object_or_404(Example, pk=pk)
     russian_text_list = strip_punct_lower(example_inst.russian_text)
     russian_text_list = russian_text_list.split()
-    shuffle(russian_text_list)
+    randomized_russian_text_list = russian_text_list[:]
+    shuffle(randomized_russian_text_list)
     tuple_list = []
     for i in range(len(russian_text_list)):
-        tuple_list.append((i, russian_text_list[i]))
+        tuple_list.append((randomized_russian_text_list[i], randomized_russian_text_list[i]))
     form = ArrangeWordsForm(tuple_list)
+    example_audio_file = example_inst.example_audio
     return render(request,
                   'ruskeyverbs/arrange_words.html',
                   context={'russian_text': example_inst.russian_text,
                            'english_text': example_inst.translation_text,
                            'form': form,
-                           'pk': pk})
+                           'pk': pk,
+                           'file': example_audio_file})
 
 
 @login_required
@@ -148,12 +150,31 @@ def ArrangeWordsEval(request, pk):
     example_inst = get_object_or_404(Example, pk=pk)
     russian_text_list = strip_punct_lower(example_inst.russian_text,
                                           stressed=True).split()
+    russian_text_list_no_stress = strip_punct_lower(example_inst.russian_text).split()
+    tuple_list = []
+    for i in range(len(russian_text_list)):
+        tuple_list.append((russian_text_list_no_stress[i], russian_text_list_no_stress[i]))
+    print(tuple_list)
     if request.method == 'POST':
-        form = ArrangeWordsForm(request.POST)
+        form = ArrangeWordsForm(tuple_list, request.POST)
         if form.is_valid():
+            if form.cleaned_data.values() == russian_text_list_no_stress:
+                score = 100
+            else:
+                user_input_string = ''.join(form.cleaned_data.values())
+                print(f"user input {user_input_string}")
+                answer = ''.join(russian_text_list_no_stress)
+                print(f'answer {answer}')
+                score = fuzz.ratio(user_input_string, answer)
+            user_input = ' '.join(form.cleaned_data.values())
+            answer = example_inst.russian_text
             return render(request,
                           'ruskeyverbs/answer_evaluation.html',
                           context={'russian_text_list': russian_text_list,
-                                   'pk':pk})
+                                   'pk': pk,
+                                   'score': score,
+                                   'user_input': user_input,
+                                   'answer': answer})
         else:
-            print('wuh oh')
+            print(form.errors)
+            print(request.POST)

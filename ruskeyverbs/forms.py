@@ -27,4 +27,4 @@ class ArrangeWordsForm(forms.Form):
         super(ArrangeWordsForm, self).__init__(*args, **kwargs)
 
         for i in range(len(example_sentence_list)):
-            self.fields[f'word{i}'] = forms.ChoiceField(choices=example_sentence_list, label='')
+            self.fields[f'custom_{i}'] = forms.ChoiceField(choices=example_sentence_list, label='')
