@@ -15,11 +15,12 @@ def count_vowels(word):
 
 
 class FillInTheBlankForm(forms.Form):
-    verb_part_of_speech = forms.CharField(label="Fill in the blank")
+    verb_part_of_speech = forms.CharField(label="Fill in the blank:")
 
     def clean_verb_part_of_speech(self):
         data = self.cleaned_data['verb_part_of_speech']
         return data
+
 
 class ArrangeWordsForm(forms.Form):
 
@@ -28,3 +29,11 @@ class ArrangeWordsForm(forms.Form):
 
         for i in range(len(example_sentence_list)):
             self.fields[f'custom_{i}'] = forms.ChoiceField(choices=example_sentence_list, label='')
+
+
+class ReproduceSentenceForm(forms.Form):
+    sentence_field = forms.CharField(label="Type the sentence in Russian:")
+
+    def clean_sentence_field(self):
+        data = self.cleaned_data['sentence_field']
+        return data

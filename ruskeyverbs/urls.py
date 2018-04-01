@@ -14,5 +14,9 @@ urlpatterns = [
          name='arrange-words'),
     path('example/<int:pk>/arrangequiz/eval', views.ArrangeWordsEval,
          name='arrange-words-eval'),
+    path('example/<int:pk>/reproducequiz', views.ReproduceSentence,
+         name='reproduce-sentence'),
+    path('example/<int:pk>/reproducequiz/eval', views.ReproduceSentenceEval,
+         name='reproduce-sentence-eval'),
     path('accounts/', include('django.contrib.auth.urls')),
 ]

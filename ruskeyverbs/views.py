@@ -12,7 +12,7 @@ from django.urls import reverse
 from fuzzywuzzy import fuzz
 from random import shuffle
 from .models import Verb, Example, PerformancePerExample
-from .forms import FillInTheBlankForm, ArrangeWordsForm
+from .forms import FillInTheBlankForm, ArrangeWordsForm, ReproduceSentenceForm
 
 
 def strip_punct_lower(some_string, stressed=False):
@@ -174,7 +174,50 @@ def ArrangeWordsEval(request, pk):
                                    'pk': pk,
                                    'score': score,
                                    'user_input': user_input,
-                                   'answer': answer})
+                                   'answer': answer,
+                                   'russian_text': example_inst.russian_text})
         else:
-            print(form.errors)
-            print(request.POST)
+            messages.warning(request,
+                             """Something went wrong.
+                             You did not enter a valid answer.""")
+            return HttpResponseRedirect(reverse('arrange-words',
+                                                args=[pk]))
+    else:
+        raise Http404
+
+
+@login_required
+def ReproduceSentence(request, pk):
+    example_inst = get_object_or_404(Example, pk=pk)
+    form = ReproduceSentenceForm()
+    example_audio_file = example_inst.example_audio
+    return render(request, 'ruskeyverbs/reproduce_sentence.html',
+                  context={'english_text': example_inst.translation_text,
+                           'form': form,
+                           'pk': pk,
+                           'file': example_audio_file})
+
+@login_required
+def ReproduceSentenceEval(request, pk):
+    example_inst = get_object_or_404(Example, pk=pk)
+    if request.method == 'POST':
+        form = ReproduceSentenceForm(request.POST)
+        if form.is_valid():
+            user_input = strip_punct_lower(form.cleaned_data['sentence_field'])
+            answer = strip_punct_lower(example_inst.russian_text)
+            score = fuzz.ratio(user_input, answer)
+            return render(request,
+                          'ruskeyverbs/answer_evaluation.html',
+                          context={'pk': pk,
+                                   'score': score,
+                                   'user_input': user_input,
+                                   'answer': answer,
+                                   'russian_text': example_inst.russian_text})
+        else:
+            messages.warning(request,
+                             """Something went wrong.
+                             You did not enter a valid answer.""")
+            return HttpResponseRedirect(reverse('arrange-words',
+                                                args=[pk]))
+    else:
+        raise Http404
