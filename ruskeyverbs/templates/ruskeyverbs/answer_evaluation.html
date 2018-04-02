@@ -13,6 +13,11 @@
         <p>That is incorrect. (Score: {{ score }}) The correct answer is <strong>{{ answer }}</strong></p>
       {% endif %}
       {{ russian_text }}
+      {% if quiz_state == 1 %}
+        <a href="{% url 'arrange-words' pk %}" class="btn btn-primary">Continue</a>
+      {% elif quiz_state == 2 %}
+        <a href="{% url 'reproduce-sentence' pk %}" class="btn btn-primary">Continue</a>
+      {% endif %}
 
     </div>
 

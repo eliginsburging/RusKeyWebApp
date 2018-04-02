@@ -5,7 +5,7 @@
 <div class="container">
   <div class="row">
     <div class="col-xs-12">
-      <p>Type th russian sentence meaning "{{ english_text }}"</p>
+      <p>Type the russian sentence meaning "{{ english_text }}"</p>
       <form class="" action="{% url 'reproduce-sentence-eval' pk=pk%}" method="post">
         {% csrf_token %}
         {% with 'ruskeyverbs/verbAudio/'|add:file as file %}

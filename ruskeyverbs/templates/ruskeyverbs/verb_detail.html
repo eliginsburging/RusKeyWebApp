@@ -6,6 +6,8 @@
   <div class="row">
     <div class="col-sm-12">
       <br>
+      <a href="{% url 'fill-in-the-blank' example_pk %}" class="btn btn-primary">Quiz</a>
+      <br>
       <h1>{{ verb.pk }} - {{ verb.infinitive}}</h1>
       <h3>Conjugation Audio</h3>
       {% with 'ruskeyverbs/verbAudio/'|add:verb.audio_file as file %}

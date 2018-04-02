@@ -5,7 +5,7 @@ from . import views
 urlpatterns = [
     path('', views.index, name='index'),
     path('verbs/', views.VerbListPerUser, name='my-verbs'),
-    path('verb/<int:pk>', views.VerbDetails.as_view(), name='verb-details'),
+    path('verb/<int:pk>', views.VerbDetails, name='verb-details'),
     path('example/<int:pk>/fitbquiz', views.FillInTheBlank,
          name='fill-in-the-blank'),
     path('example/<int:pk>/fitbquiz/eval', views.FillInTheBlankEval,

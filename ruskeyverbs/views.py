@@ -5,13 +5,14 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib import messages
 from django.views import generic
+from django.core.exceptions import ObjectDoesNotExist
 from django.db.models import Min
 from django.db.models import Q
 from django.shortcuts import get_object_or_404
 from django.urls import reverse
 from fuzzywuzzy import fuzz
 from random import shuffle
-from .models import Verb, Example, PerformancePerExample
+from .models import Verb, Example, PerformancePerExample, UserState
 from .forms import FillInTheBlankForm, ArrangeWordsForm, ReproduceSentenceForm
 
 
@@ -63,8 +64,21 @@ def VerbListPerUser(request):
     )
 
 
-class VerbDetails(LoginRequiredMixin, generic.DetailView):
-    model = Verb
+@login_required
+def VerbDetails(request, pk):
+    current_user = request.user
+    verb = Verb.objects.get(pk=pk)
+    try:
+        user_state = UserState.objects.get(verb=verb).example_number
+    except ObjectDoesNotExist:
+        user_state = 0
+    example_pk = Example.objects.filter(verb=verb)[user_state].pk
+    print(example_pk)
+    return render(
+        request,
+        'ruskeyverbs/verb_detail.html',
+        context={'verb': verb, 'example_pk': example_pk}
+    )
 
 
 @login_required
@@ -86,8 +100,12 @@ def FillInTheBlank(request, pk):
     return render(
         request,
         'ruskeyverbs/fill_in_the_blank.html',
-        context={'quiz_text': russian_text, 'answer': answer, 'form': form,
-                 'pk': pk, 'file': example_audio_file}
+        context={'quiz_text': russian_text,
+                 'answer': answer,
+                 'form': form,
+                 'pk': pk,
+                 'file': example_audio_file,
+                 'english_text': example_inst.translation_text}
     )
 
 
@@ -113,7 +131,8 @@ def FillInTheBlankEval(request, pk):
                                    'answer': answer,
                                    'user_input': user_input,
                                    'score': score,
-                                   'pk': pk})
+                                   'pk': pk,
+                                   'quiz_state': 1})
         else:
             messages.warning(request,
                              """Something went wrong.
@@ -175,7 +194,8 @@ def ArrangeWordsEval(request, pk):
                                    'score': score,
                                    'user_input': user_input,
                                    'answer': answer,
-                                   'russian_text': example_inst.russian_text})
+                                   'russian_text': example_inst.russian_text,
+                                   'quiz_state': 2})
         else:
             messages.warning(request,
                              """Something went wrong.
@@ -212,7 +232,8 @@ def ReproduceSentenceEval(request, pk):
                                    'score': score,
                                    'user_input': user_input,
                                    'answer': answer,
-                                   'russian_text': example_inst.russian_text})
+                                   'russian_text': example_inst.russian_text,
+                                   'quiz_state': 3})
         else:
             messages.warning(request,
                              """Something went wrong.
