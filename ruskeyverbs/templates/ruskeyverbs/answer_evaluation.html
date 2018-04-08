@@ -17,6 +17,10 @@
         <a href="{% url 'arrange-words' pk %}" class="btn btn-primary">Continue</a>
       {% elif quiz_state == 2 %}
         <a href="{% url 'reproduce-sentence' pk %}" class="btn btn-primary">Continue</a>
+      {% elif quiz_state == 3 and request.session.quiz_counter < 4 %}
+        <a href="{% url 'fill-in-the-blank' pk %}" class="btn btn-primary">Continue</a>
+      {% elif quiz_state == 3 and request.session.quiz_counter >= 4 %}
+        <a href="{% url 'verb-details' verb_pk %}" class="btn btn-primary">End Quiz</a>
       {% endif %}
 
     </div>

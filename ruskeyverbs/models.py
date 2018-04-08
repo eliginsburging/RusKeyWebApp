@@ -77,12 +77,3 @@ class PerformancePerExample(models.Model):
 
     def __str__(self):
         return str(self.due_date)
-
-
-class UserState(models.Model):
-    verb = models.ForeignKey(Verb, on_delete=models.CASCADE)
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-    example_number = models.PositiveSmallIntegerField()
-
-    def __str__(self):
-        return str(self.example_number)
