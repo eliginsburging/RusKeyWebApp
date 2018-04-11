@@ -1,31 +1,25 @@
-{% extends "ruskeyverbs/base_generic.html" %}
+{% extends "ruskeyverbs/quiz_box.html" %}
+{% block quiz_content %}
+{% if score > 90 %}
+  <h2 class="correct">Correct!</h2>
 
-{% block content %}
-<div class="container">
-  <div class="row">
-    <div class="col-xs-12">
-      <p>You entered {{ user_input }}</p>
-      {% if score == 100 %}
-        <p>That is exactly correct!</p>
-      {% elif score > 90 %}
-        <p>That is correct! (Score: {{ score }})</p>
-      {% else %}
-        <p>That is incorrect. (Score: {{ score }}) The correct answer is <strong>{{ answer }}</strong></p>
-      {% endif %}
-      {{ russian_text }}
-      {% if quiz_state == 1 %}
-        <a href="{% url 'arrange-words' pk %}" class="btn btn-primary">Continue</a>
-      {% elif quiz_state == 2 %}
-        <a href="{% url 'reproduce-sentence' pk %}" class="btn btn-primary">Continue</a>
-      {% elif quiz_state == 3 and request.session.quiz_counter < 4 %}
-        <a href="{% url 'fill-in-the-blank' pk %}" class="btn btn-primary">Continue</a>
-      {% elif quiz_state == 3 and request.session.quiz_counter >= 4 %}
-        <a href="{% url 'verb-details' verb_pk %}" class="btn btn-primary">End Quiz</a>
-      {% endif %}
+{% else %}
+  <h2 class="incorrect">Incorrect</h2>
+{% endif %}
+<p>You entered: <span class="bold {% if score <= 90 %}text-danger{% else %}correctanswer{% endif %}">{{ user_input }}</span></p>
+<p>The correct answer is: <span class="bold">{{ answer }}</span></p>
+<p class="center">{{ russian_text }}</p>
+<h3>Score: {{ score }}</h3>
+{% if quiz_state == 1 %}
+  <a href="{% url 'arrange-words' pk %}" class="btn btn-primary float-right">Continue</a>
+{% elif quiz_state == 2 %}
+  <a href="{% url 'reproduce-sentence' pk %}" class="btn btn-primary float-right">Continue</a>
+{% elif quiz_state == 3 and request.session.quiz_counter < 4 %}
+  <a href="{% url 'fill-in-the-blank' pk %}" class="btn btn-primary float-right">Continue</a>
+{% elif quiz_state == 3 and request.session.quiz_counter >= 4 %}
+  <a href="{% url 'verb-details' verb_pk %}" class="btn btn-primary float-right">End Quiz</a>
+{% endif %}
+<br>
+<br>
 
-    </div>
-
-  </div>
-
-</div>
 {% endblock %}

@@ -24,8 +24,8 @@
             </p>
             <p class='text-center'>
               due:
-              <span class="{% if verb|overdue:current_user %}font-weight-bold font-italic text-danger{% endif %}">
-                {{ verb|duedate:current_user }}
+              <span class="{% if verb|overdue:request.user %}font-weight-bold font-italic text-danger{% endif %}">
+                {{ verb|duedate:request.user }}
               </span>
             </p>
           </div>

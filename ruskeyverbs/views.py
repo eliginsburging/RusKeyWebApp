@@ -15,7 +15,7 @@ from random import shuffle
 from .models import Verb, Example, PerformancePerExample
 from .forms import FillInTheBlankForm, ArrangeWordsForm, ReproduceSentenceForm
 import datetime
-
+import decimal
 
 def strip_punct_lower(some_string, stressed=False):
     """
@@ -69,7 +69,7 @@ def VerbListPerUser(request):
     return render(
         request,
         'ruskeyverbs/list_view_per_user.html',
-        context={'verb_list': sorted_verb_list, 'current_user': current_user}
+        context={'verb_list': sorted_verb_list}
     )
 
 
@@ -275,12 +275,13 @@ def ReproduceSentenceEval(request, pk):
                 elif last_interval == 2:
                     last_interval = 6
                 else:
-                    easiness_factor += (0.1-(5-(average_score*5))*(0.08+(5-(average_score*5))*0.02))
+                    easiness_factor += decimal.Decimal(0.1-(5-(average_score*5))*(0.08+(5-(average_score*5))*0.02))
                     if easiness_factor < 1.3:
                         easiness_factor = 1.3
                     elif easiness_factor > 5:
                         easiness_factor = 5
                     last_interval *= easiness_factor
+                    last_interval = int(last_interval)
             if PerformanceObj:
                 PerformanceObj.easiness_factor = easiness_factor
                 PerformanceObj.last_interval = last_interval

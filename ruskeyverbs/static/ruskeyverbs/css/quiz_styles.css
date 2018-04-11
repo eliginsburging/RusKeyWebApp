@@ -1,0 +1,44 @@
+.quiz-box {
+  border: 2px solid black;
+  padding: 10px;
+  }
+h2 {
+  text-align: center; font-weight: bold
+}
+h3 {
+  text-align: center;
+
+}
+hr {
+  border-color:black
+}
+.eval_box {
+  border: 2px solid black; padding: 10px
+}
+
+.bold {
+  font-weight: bold;
+}
+
+.correct {
+  background-color: #00cc00;
+  text-align: center;
+}
+
+.correctanswer {
+  color: #00cc00;
+}
+
+.incorrect {
+  background-color: #ff2b3c;
+  text-align: center;
+}
+.center {
+  text-align: center;
+}
+
+
+.eval_header {
+  font-weight: bold;
+  border: 1px solid black;
+}

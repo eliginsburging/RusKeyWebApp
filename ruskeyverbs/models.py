@@ -64,7 +64,7 @@ class Example(models.Model):
     example_audio = models.CharField(max_length=40)
 
     def __str__(self):
-        return self.translation_text
+        return self.verb.infinitive + ' ' + self.translation_text
 
 
 class PerformancePerExample(models.Model):
@@ -76,4 +76,8 @@ class PerformancePerExample(models.Model):
     due_date = models.DateField()
 
     def __str__(self):
-        return str(self.due_date)
+        return (str(self.due_date)
+                + ' '
+                + str(self.example.verb.infinitive)
+                + ' '
+                + self.example.translation_text)
