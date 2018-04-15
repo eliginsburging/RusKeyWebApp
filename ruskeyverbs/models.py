@@ -3,6 +3,7 @@ from django.contrib.auth.models import User
 from django.utils import timezone
 from django.db.models import Min
 from django.core.exceptions import ObjectDoesNotExist
+from random import shuffle
 import datetime
 # Create your models here.
 
@@ -41,21 +42,43 @@ class Verb(models.Model):
     def is_overdue(self, my_user):
         return self.get_earliest_due_date(my_user) < datetime.date.today()
 
-    def get_forms_list(self):
-        return [self.infinitive.replace(chr(769),''),
-                self.first_sg.replace(chr(769),''),
-                self.second_sg.replace(chr(769),''),
-                self.third_sg.replace(chr(769),''),
-                self.first_pl.replace(chr(769),''),
-                self.second_pl.replace(chr(769),''),
-                self.third_pl.replace(chr(769),''),
-                self.imperative_sg.replace(chr(769),''),
-                self.imperative_pl.replace(chr(769),''),
-                self.past_masc.replace(chr(769),''),
-                self.past_fem.replace(chr(769),''),
-                self.past_neut.replace(chr(769),''),
-                self.past_pl.replace(chr(769),'')]
-
+    def get_forms_list(self, stressed=True, random=False):
+        stressed_list = [self.infinitive,
+                         self.first_sg,
+                         self.second_sg,
+                         self.third_sg,
+                         self.first_pl,
+                         self.second_pl,
+                         self.third_pl,
+                         self.imperative_sg,
+                         self.imperative_pl,
+                         self.past_masc,
+                         self.past_fem,
+                         self.past_neut,
+                         self.past_pl]
+        unstressed_list = [self.infinitive.replace(chr(769), ''),
+                          self.first_sg.replace(chr(769), ''),
+                          self.second_sg.replace(chr(769), ''),
+                          self.third_sg.replace(chr(769), ''),
+                          self.first_pl.replace(chr(769), ''),
+                          self.second_pl.replace(chr(769), ''),
+                          self.third_pl.replace(chr(769), ''),
+                          self.imperative_sg.replace(chr(769), ''),
+                          self.imperative_pl.replace(chr(769), ''),
+                          self.past_masc.replace(chr(769), ''),
+                          self.past_fem.replace(chr(769), ''),
+                          self.past_neut.replace(chr(769), ''),
+                          self.past_pl.replace(chr(769), '')]
+        if random and stressed:
+            shuffle(stressed_list)
+            return stressed_list
+        elif random and not stressed:
+            shuffle(unstressed_list)
+            return unstressed_list
+        elif stressed:
+            return stressed_list
+        else:
+            return unstressed_list
 
 class Example(models.Model):
     verb = models.ForeignKey(Verb, on_delete=models.CASCADE)

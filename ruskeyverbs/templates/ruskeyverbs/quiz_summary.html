@@ -1,0 +1,38 @@
+{% extends "ruskeyverbs/base_generic.html" %}
+{% block extra_head_content %}
+  {% load static %}
+  <link rel="stylesheet" href="{% static 'ruskeyverbs/css/quiz_summary_style.css' %}"/>
+
+{% endblock %}
+{% block content %}
+{% load ruskeyverbs_extras %}
+<div class="container">
+  <div class="row justify-content-center">
+    <div class="col-sm-12">
+      <h2>Quiz Summary</h2>
+      <table class="table table-lg table-bordered">
+        <tr>
+          <th>Example</th>
+          <th>Translation</th>
+          <th>Multiple Choice Score</th>
+          <th>Fill in the Blank Score</th>
+          <th>Arrange the Sentence Score</th>
+          <th>Reproduce the Sentence Score</th>
+          <th>Average Score</th>
+        </tr>
+        {% for tup in request.session.quiz_summary %}
+        <tr>
+          {% for data in tup %}
+            <td class="{% if data >= 90 %}correct{% elif data <= 90 %}incorrect{% endif %}">{{ data }}</td>
+          {% endfor %}
+        </tr>
+        {% endfor %}
+      </table>
+      <hr>
+      <a href="{% url 'verb-details' pk %}" class="btn btn-primary float-right">End Quiz</a>
+      <br>
+      <br>
+    </div>
+  </div>
+</div>
+{% endblock %}

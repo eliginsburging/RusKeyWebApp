@@ -16,15 +16,11 @@
           {% block quiz_content %}
           {% endblock %}
           <hr>
-          <p class="center">Example Progress</p>
           <div class="progress">
-            <div class="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
-            </div>
-          </div>
-          <p class="center">Overall Quiz Progress</p>
-          <div class="progress">
-            <div class="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
-
+            <div class="progress-bar" role="progressbar"
+            aria-valuenow="{{ request.session.progress }}"
+            aria-valuemin="0" aria-valuemax="100"
+            style="width:{{ request.session.progress }}%">
             </div>
           </div>
         </div>

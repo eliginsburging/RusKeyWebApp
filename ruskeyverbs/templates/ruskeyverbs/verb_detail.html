@@ -21,7 +21,7 @@
         </div>
         <div class="col-sm-6">
           <br>
-          <a href="{% url 'fill-in-the-blank' example_pk %}" class="btn btn-lg btn-primary float-right">Start Quiz</a>
+          <a href="{% if not_studied %}{% url 'study-session' example_pk %}{% else %}{% url 'multiple-choice' example_pk %}{% endif %}" class="btn btn-lg btn-primary float-right">Start Quiz</a>
           <br>
           <br>
           <br>

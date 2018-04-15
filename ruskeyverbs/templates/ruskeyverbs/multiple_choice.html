@@ -1,7 +1,7 @@
 {% extends "ruskeyverbs/quiz_box.html" %}
 {% block quiz_content %}
 {% load static %}
-<h2>Fill in the Blank</h2>
+<h2>Multiple Choice Fill in the Blank</h2>
 {{ quiz_text }}
 <br>
 meaning: {{ english_text }}
@@ -12,7 +12,7 @@ meaning: {{ english_text }}
 </audio>
 {% endwith %}
 <hr>
-<form class="" action="{% url 'fill-in-eval' pk=pk%}" method="post" autocomplete="off">
+<form class="" action="{% url 'multiple-choice-eval' pk=pk%}" method="post">
   {% csrf_token %}
 
   <table>

@@ -14,6 +14,13 @@ def count_vowels(word):
     return count
 
 
+class MultipleChoiceForm(forms.Form):
+
+    def __init__(self, choices, *args, **kwargs):
+        super(MultipleChoiceForm, self).__init__(*args, **kwargs)
+        self.fields['answer'] = forms.ChoiceField(choices=choices, label='')
+
+
 class FillInTheBlankForm(forms.Form):
     verb_part_of_speech = forms.CharField(label="Fill in the blank:")
 
@@ -24,10 +31,10 @@ class FillInTheBlankForm(forms.Form):
 
 class ArrangeWordsForm(forms.Form):
 
-    def __init__(self, example_sentence_list, *args, **kwargs):
+    def __init__(self, example_sentence_list, sentence_len, *args, **kwargs):
         super(ArrangeWordsForm, self).__init__(*args, **kwargs)
-
-        for i in range(len(example_sentence_list)):
+        # since we are adding three other random forms of the verb,
+        for i in range(sentence_len):
             self.fields[f'custom_{i}'] = forms.ChoiceField(choices=example_sentence_list, label='')
 
 

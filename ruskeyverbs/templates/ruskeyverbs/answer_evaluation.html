@@ -1,8 +1,9 @@
 {% extends "ruskeyverbs/quiz_box.html" %}
 {% block quiz_content %}
-{% if score > 90 %}
-  <h2 class="correct">Correct!</h2>
-
+{% if score == 100 %}
+  <h2 class="correct">Exactly Correct!</h2>
+{% elif score > 90 %}
+  <h2 class="correct">Almost Correct!</h2>
 {% else %}
   <h2 class="incorrect">Incorrect</h2>
 {% endif %}
@@ -11,13 +12,17 @@
 <p class="center">{{ russian_text }}</p>
 <h3>Score: {{ score }}</h3>
 {% if quiz_state == 1 %}
-  <a href="{% url 'arrange-words' pk %}" class="btn btn-primary float-right">Continue</a>
-{% elif quiz_state == 2 %}
-  <a href="{% url 'reproduce-sentence' pk %}" class="btn btn-primary float-right">Continue</a>
-{% elif quiz_state == 3 and request.session.quiz_counter < 4 %}
   <a href="{% url 'fill-in-the-blank' pk %}" class="btn btn-primary float-right">Continue</a>
-{% elif quiz_state == 3 and request.session.quiz_counter >= 4 %}
-  <a href="{% url 'verb-details' verb_pk %}" class="btn btn-primary float-right">End Quiz</a>
+{% elif quiz_state == 2 %}
+  <a href="{% url 'arrange-words' pk %}" class="btn btn-primary float-right">Continue</a>
+{% elif quiz_state == 3 %}
+  <a href="{% url 'reproduce-sentence' pk %}" class="btn btn-primary float-right">Continue</a>
+{% elif quiz_state == 4 and request.session.quiz_counter < 4 and not_studied %}
+  <a href="{% url 'study-session' pk %}" class="btn btn-primary float-right">Continue</a>
+{% elif quiz_state == 4 and request.session.quiz_counter < 4 %}
+  <a href="{% url 'multiple-choice' pk %}" class="btn btn-primary float-right">Continue</a>
+{% elif quiz_state == 4 and request.session.quiz_counter >= 4 %}
+  <a href="{% url 'quiz-summary' verb_pk %}" class="btn btn-primary float-right">End Quiz</a>
 {% endif %}
 <br>
 <br>
