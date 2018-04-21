@@ -7,6 +7,7 @@ from random import shuffle
 import datetime
 # Create your models here.
 
+stress_mark = chr(769)
 
 class Verb(models.Model):
     infinitive = models.CharField(max_length=30)
@@ -30,6 +31,9 @@ class Verb(models.Model):
 
     def __str__(self):
         return self.infinitive
+
+    def remove_stress(self, word):
+        return word.replace(stress_mark, '')
 
     def get_earliest_due_date(self, my_user):
         examples = PerformancePerExample.objects.filter(user=my_user, example__verb=self).aggregate(Min('due_date'))
@@ -56,19 +60,10 @@ class Verb(models.Model):
                          self.past_fem,
                          self.past_neut,
                          self.past_pl]
-        unstressed_list = [self.infinitive.replace(chr(769), ''),
-                          self.first_sg.replace(chr(769), ''),
-                          self.second_sg.replace(chr(769), ''),
-                          self.third_sg.replace(chr(769), ''),
-                          self.first_pl.replace(chr(769), ''),
-                          self.second_pl.replace(chr(769), ''),
-                          self.third_pl.replace(chr(769), ''),
-                          self.imperative_sg.replace(chr(769), ''),
-                          self.imperative_pl.replace(chr(769), ''),
-                          self.past_masc.replace(chr(769), ''),
-                          self.past_fem.replace(chr(769), ''),
-                          self.past_neut.replace(chr(769), ''),
-                          self.past_pl.replace(chr(769), '')]
+        if not stressed:
+            unstressed_list = []
+            for form in stressed_list:
+                unstressed_list.append(self.remove_stress(form))
         if random and stressed:
             shuffle(stressed_list)
             return stressed_list

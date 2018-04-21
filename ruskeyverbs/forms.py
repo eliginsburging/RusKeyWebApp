@@ -7,10 +7,10 @@ from django.utils.translation import ugettext as _
 def count_vowels(word):
     """takes a string and returns the number of Russian vowels"""
     # For use in checking whether a word has a stress
+    vowels = "аеёиоуыэюяАЕЁИОУЫЭЮЯ"
     count = 0
-    for letter in word:
-        if letter in "аеёиоуыэюяАЕЁИОУЫЭЮЯ":
-            count += 1
+    for vowel in vowels:
+        count += word.count(vowel)
     return count
 
 

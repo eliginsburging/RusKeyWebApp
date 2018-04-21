@@ -7,7 +7,7 @@ from django.contrib import messages
 from django.views import generic
 from django.core.exceptions import ObjectDoesNotExist
 from django.db.models import Min
-from django.db.models import Q
+from django.db.models import Q, F
 from django.shortcuts import get_object_or_404
 from django.urls import reverse
 from django.core import serializers
@@ -17,6 +17,9 @@ from .models import Verb, Example, PerformancePerExample
 from .forms import FillInTheBlankForm, ArrangeWordsForm, ReproduceSentenceForm, MultipleChoiceForm
 import datetime
 import decimal
+import re
+
+stress_mark = chr(769)
 
 
 def strip_punct_lower(some_string, stressed=False):
@@ -24,16 +27,11 @@ def strip_punct_lower(some_string, stressed=False):
     helper function that takes a string and returns the same string in lower
     case with all punctuation marks stripped
     """
-    some_string = some_string.replace(',', '')
-    some_string = some_string.replace('.', '')
-    some_string = some_string.replace('?', '')
-    some_string = some_string.replace('!', '')
-    some_string = some_string.replace(';', '')
-    some_string = some_string.replace(':', '')
+    regular_exp = '[,.?!;:]*'
     if not stressed:
-        some_string = some_string.replace(chr(769), '')
-    some_string = some_string.lower()
-    return some_string
+        regular_exp += stress_mark + '*'
+    punctuation = re.compile(regular_exp)
+    return punctuation.sub('', some_string).lower()
 
 
 def index(request):
@@ -63,15 +61,8 @@ def VerbListPerUser(request):
             filter=Q(
                 example__performanceperexample__user_id=request.user.pk)
             )
-        ).order_by('due').exclude(due=None)
-    verbs_without_due_dates = Verb.objects.annotate(
-        due=Min('example__performanceperexample__due_date',
-                filter=Q(
-                    example__performanceperexample__user_id=request.user.pk)
-                )
-        ).exclude(~Q(due=None))
-    sorted_verb_list = list(chain(verbs_with_due_dates,
-                                  verbs_without_due_dates))
+        ).order_by(F('due').asc(nulls_last=True))
+    sorted_verb_list = list(verbs_with_due_dates)
     return render(
         request,
         'ruskeyverbs/list_view_per_user.html',
@@ -97,11 +88,10 @@ def VerbDetails(request, pk):
     into the quiz; otherwise, send them to the study page before the
     quiz
     """
-    try:
-        print(PerformancePerExample.objects.get(pk=example_pk,
-                                                user=request.user))
+    if not PerformancePerExample.objects.filter(pk=example_pk,
+                                                user=request.user).exists():
         not_studied = False
-    except ObjectDoesNotExist:
+    else:
         not_studied = True
 
     request.session['quiz_counter'] = 0
@@ -135,10 +125,10 @@ def StudyPage(request, pk):
     test each word of the sentence to see which one is a form of the verb
     being studied and determine which form it is
     """
-    for i in range(len(russian_text_list)):
-        if russian_text_list[i] in example_inst.verb.get_forms_list(stressed=True):
-            target_verb = russian_text_list[i]
-            target_verb_modified = "<b>" + russian_text_list[i] + "</b>"
+    for word in russian_text_list:
+        if word in example_inst.verb.get_forms_list(stressed=True):
+            target_verb = word
+            target_verb_modified = "<b>" + word + "</b>"
     russian_text_bold = example_inst.russian_text.replace(target_verb,
                                                      target_verb_modified)
     request.session['quiz-state'] = 0
@@ -162,22 +152,19 @@ def MultipleChoice(request, pk):
     example_inst = get_object_or_404(Example, pk=pk)
     russian_text_list = strip_punct_lower(example_inst.russian_text,
                                           stressed=True).split()
-    unstressed_russian_text_list = strip_punct_lower(
-        example_inst.russian_text).split()
     """
     test each word of the sentence to see which one is a form of the verb
     being studied and determine which form it is
     """
-    print(request.session)
     field_names = Verb._meta.get_fields()
-    for i in range(len(russian_text_list)):
+    for word in russian_text_list:
         for field in field_names:
             try:
                 verb_form = getattr(example_inst.verb, field.name)
-                if verb_form == russian_text_list[i]:
+                if verb_form == word:
                     target_field = field
-                    answer = unstressed_russian_text_list[i]
-                    stressed_answer = russian_text_list[i]
+                    answer = word.replace(stress_mark, '')
+                    stressed_answer = word
             except AttributeError:
                 pass
                 # pass to get around many to one field returned by get_fields()
