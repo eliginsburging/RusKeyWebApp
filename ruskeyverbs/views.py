@@ -328,9 +328,9 @@ def FillInTheBlankEval(request, pk):
     test each word of the sentence to see which one is a form of the verb
     being studied - this is the correct answer to the quiz
     """
-    for i in range(len(russian_text_list)):
-        if russian_text_list[i] in example_inst.verb.get_forms_list(stressed=False):
-            answer = russian_text_list[i]
+    for word in russian_text_list:
+        if word in example_inst.verb.get_forms_list(stressed=False):
+            answer = word
     if request.method == 'POST':
         form = FillInTheBlankForm(request.POST)
         if form.is_valid():
