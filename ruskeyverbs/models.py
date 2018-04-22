@@ -5,6 +5,7 @@ from django.db.models import Min
 from django.core.exceptions import ObjectDoesNotExist
 from random import shuffle
 import datetime
+import decimal
 # Create your models here.
 
 stress_mark = chr(769)
@@ -75,6 +76,7 @@ class Verb(models.Model):
         else:
             return unstressed_list
 
+
 class Example(models.Model):
     verb = models.ForeignKey(Verb, on_delete=models.CASCADE)
     russian_text = models.CharField(max_length=250)
@@ -99,3 +101,32 @@ class PerformancePerExample(models.Model):
                 + str(self.example.verb.infinitive)
                 + ' '
                 + self.example.translation_text)
+
+    def update_interval(self, score):
+        """
+        takes a score; updates the PerformancePerExample instance based on the
+        SM2 algorithm
+        """
+        # if the user did very poorly, next study date will be one day out
+        if score*5 < 3.5:
+            self.last_interval = 1
+        else:
+            # otherwise, update the last_interval and easiness_factor per SM2
+            if self.last_interval == 1:
+                self.last_interval = 2
+            elif self.last_interval == 2:
+                self.last_interval = 6
+            else:
+                self.easiness_factor += decimal.Decimal(
+                    0.1-(5-(score*5))
+                    * (0.08+(5-(score*5))*0.02))
+                if self.easiness_factor < 1.3:
+                    self.easiness_factor = decimal.Decimal(1.3)
+                elif self.easiness_factor > 5:
+                    self.easiness_factor = 5
+                last_int = self.last_interval * self.easiness_factor
+                self.last_interval = int(last_int)
+        self.date_last_studied = datetime.date.today()
+        self.due_date = (datetime.date.today()
+                         + datetime.timedelta(days=self.last_interval))
+        self.save()
