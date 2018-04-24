@@ -1,0 +1,32 @@
+{% extends "ruskeyverbs/quiz_box.html" %}
+{% block quiz_content %}
+{% load static %}
+<h2>Multiple Choice Fill in the Blank</h2>
+{{ quiz_text }}
+<br>
+meaning: {{ english_text }}
+<hr>
+{% with 'ruskeyverbs/verbAudio/'|add:file as file %}
+<audio controls autoplay>
+  <source src="{% static file %}" type="audio/mpeg"></source>
+</audio>
+{% endwith %}
+<hr>
+<form class="" action="{% url 'multiple-choice-eval' pk=pk%}" method="post">
+  {% csrf_token %}
+
+  <table>
+    {{ form }}
+  </table>
+  <input class="btn btn-primary float-right" type="submit" name="" value="Check Answer">
+  {% if messages %}
+<ul class="messages">
+    {% for message in messages %}
+    <li{% if message.tags %} class="{{ message.tags }} text-danger"{% endif %}>{{ message }}</li>
+    {% endfor %}
+</ul>
+{% endif %}
+</form>
+<br>
+<br>
+{% endblock %}

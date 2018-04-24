@@ -3,9 +3,12 @@ from django.contrib.auth.models import User
 from django.utils import timezone
 from django.db.models import Min
 from django.core.exceptions import ObjectDoesNotExist
+from random import shuffle
 import datetime
+import decimal
 # Create your models here.
 
+stress_mark = chr(769)
 
 class Verb(models.Model):
     infinitive = models.CharField(max_length=30)
@@ -30,6 +33,9 @@ class Verb(models.Model):
     def __str__(self):
         return self.infinitive
 
+    def remove_stress(self, word):
+        return word.replace(stress_mark, '')
+
     def get_earliest_due_date(self, my_user):
         examples = PerformancePerExample.objects.filter(user=my_user, example__verb=self).aggregate(Min('due_date'))
         future_date = datetime.date.today() + datetime.timedelta(weeks=9999)
@@ -41,6 +47,35 @@ class Verb(models.Model):
     def is_overdue(self, my_user):
         return self.get_earliest_due_date(my_user) < datetime.date.today()
 
+    def get_forms_list(self, stressed=True, random=False):
+        stressed_list = [self.infinitive,
+                         self.first_sg,
+                         self.second_sg,
+                         self.third_sg,
+                         self.first_pl,
+                         self.second_pl,
+                         self.third_pl,
+                         self.imperative_sg,
+                         self.imperative_pl,
+                         self.past_masc,
+                         self.past_fem,
+                         self.past_neut,
+                         self.past_pl]
+        if not stressed:
+            unstressed_list = []
+            for form in stressed_list:
+                unstressed_list.append(self.remove_stress(form))
+        if random and stressed:
+            shuffle(stressed_list)
+            return stressed_list
+        elif random and not stressed:
+            shuffle(unstressed_list)
+            return unstressed_list
+        elif stressed:
+            return stressed_list
+        else:
+            return unstressed_list
+
 
 class Example(models.Model):
     verb = models.ForeignKey(Verb, on_delete=models.CASCADE)
@@ -49,7 +84,7 @@ class Example(models.Model):
     example_audio = models.CharField(max_length=40)
 
     def __str__(self):
-        return self.translation_text
+        return self.verb.infinitive + ' ' + self.translation_text
 
 
 class PerformancePerExample(models.Model):
@@ -61,4 +96,37 @@ class PerformancePerExample(models.Model):
     due_date = models.DateField()
 
     def __str__(self):
-        return str(self.due_date)
+        return (str(self.due_date)
+                + ' '
+                + str(self.example.verb.infinitive)
+                + ' '
+                + self.example.translation_text)
+
+    def update_interval(self, score):
+        """
+        takes a score; updates the PerformancePerExample instance based on the
+        SM2 algorithm
+        """
+        # if the user did very poorly, next study date will be one day out
+        if score*5 < 3.5:
+            self.last_interval = 1
+        else:
+            # otherwise, update the last_interval and easiness_factor per SM2
+            if self.last_interval == 1:
+                self.last_interval = 2
+            elif self.last_interval == 2:
+                self.last_interval = 6
+            else:
+                self.easiness_factor += decimal.Decimal(
+                    0.1-(5-(score*5))
+                    * (0.08+(5-(score*5))*0.02))
+                if self.easiness_factor < 1.3:
+                    self.easiness_factor = decimal.Decimal(1.3)
+                elif self.easiness_factor > 5:
+                    self.easiness_factor = 5
+                last_int = self.last_interval * self.easiness_factor
+                self.last_interval = int(last_int)
+        self.date_last_studied = datetime.date.today()
+        self.due_date = (datetime.date.today()
+                         + datetime.timedelta(days=self.last_interval))
+        self.save()

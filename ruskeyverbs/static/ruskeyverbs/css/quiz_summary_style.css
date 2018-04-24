@@ -1,0 +1,14 @@
+h2 {
+  text-align: center;
+}
+
+.correct {
+  background-color: #00cc00;
+  font-weight: bold;
+  text-align: center;
+}
+.incorrect {
+  background-color: #ff2b3c;
+  font-weight:bold;
+  text-align: center;
+}

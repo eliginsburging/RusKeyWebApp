@@ -1,0 +1,27 @@
+{% extends "ruskeyverbs/quiz_box.html" %}
+{% load static %}
+{% block quiz_content %}
+        <h2>Arrange the Words</h2>
+        <p>Arrange the words in the Russian sentence meaning "{{ english_text }}"</p>
+        <form class="" action="{% url 'arrange-words-eval' pk=pk%}" method="post">
+          {% csrf_token %}
+          {% with 'ruskeyverbs/verbAudio/'|add:file as file %}
+          <audio controls autoplay>
+            <source src="{% static file %}" type="audio/mpeg"></source>
+          </audio>
+          {% endwith %}
+          <p>
+            {{ form }}
+          </p>
+          <input class="btn btn-primary float-right" type="submit" name="" value="Check Answer">
+          {% if messages %}
+        <ul class="messages">
+            {% for message in messages %}
+            <li{% if message.tags %} class="{{ message.tags }} text-danger"{% endif %}>{{ message }}</li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+        </form>
+        <br>
+        <br>
+{% endblock %}
