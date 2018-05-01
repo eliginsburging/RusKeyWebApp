@@ -1,7 +1,7 @@
 from django import forms
-
+from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
-from django.utils.translation import ugettext as _
+from django.contrib.auth.forms import UserCreationForm
 
 
 def count_vowels(word):
@@ -44,3 +44,11 @@ class ReproduceSentenceForm(forms.Form):
     def clean_sentence_field(self):
         data = self.cleaned_data['sentence_field']
         return data
+
+
+class UserForm(UserCreationForm):
+    email = forms.EmailField(max_length=200, help_text='Required')
+
+    class Meta:
+        model = User
+        fields = ['username', 'email', 'password1', 'password2']

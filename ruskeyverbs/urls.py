@@ -1,5 +1,4 @@
-from django.urls import path, include
-
+from django.contrib.auth import views as auth_views
 from . import views
 
 urlpatterns = [
@@ -26,5 +25,10 @@ urlpatterns = [
          name='reproduce-sentence-eval'),
     path('verb/<int:pk>/quizsummary', views.QuizSummary,
          name='quiz-summary'),
+    path('accounts/login/', auth_views.login,
+         {'template_name': 'ruskeyverbs/login.html'}),
+    path('register/', views.SignUp, name='signup'),
+    path('activate/<uidb64>/<token>/', views.activate, name='activate'),
     path('accounts/', include('django.contrib.auth.urls')),
+    path('api-auth/', include('rest_framework.urls'))
 ]

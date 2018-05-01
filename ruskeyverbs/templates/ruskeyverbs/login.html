@@ -1,0 +1,21 @@
+{% extends "ruskeyverbs/message.html" %}
+{% block message_content %}
+<h2>Login</h2>
+<br>
+<form class="" action="index.html" method="post">
+  {% csrf_token %}
+  {% for field in form %}
+  <p>{{ field.label_tag }}<br>
+  {{field}}</p>
+  {% if field.help_text %}
+    <small style="display: none">{{ field.help_text }}</small>
+  {% endif %}
+  {% for error in field.errors %}
+    <p style="color: red">{{ error }}</p>
+  {% endfor %}
+</p>
+{% endfor %}
+  <button type="submit" class="btn btn-primary float-right" name="button">Login</button>
+
+</form>
+{% endblock %}
