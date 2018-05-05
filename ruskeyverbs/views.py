@@ -1,8 +1,7 @@
-from django.shortcuts import render, redirect
-from django.http import HttpResponseRedirect, Http404, HttpResponse
+from django.shortcuts import render
+from django.http import HttpResponseRedirect, Http404
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
-from django.contrib.auth import authenticate, login
 from django.contrib.sites.shortcuts import get_current_site
 from django.contrib import messages
 from django.db.models import Min
@@ -11,8 +10,11 @@ from django.shortcuts import get_object_or_404
 from django.urls import reverse
 from django.template.loader import render_to_string
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
-from django.utils.encoding import force_bytes, force_text
+from django.utils.encoding import force_bytes
 from django.core.mail import EmailMessage
+from rest_framework import viewsets
+from rest_framework.response import Response
+from .serializers import UserSerializer
 from fuzzywuzzy import fuzz
 from random import shuffle, choices
 from .models import Verb, Example, PerformancePerExample
@@ -664,3 +666,17 @@ def QuizSummary(request, pk):
                       context={'verb': verb_inst, 'pk': pk})
     else:
         raise Http404
+
+
+class UserViewSet(viewsets.ReadOnlyModelViewSet):
+    """
+    API endpoint that allows User instances to be viewed
+    """
+    serializer_class = UserSerializer
+    queryset = User.objects.all()
+    def get_queryset(self):
+        queryset = User.objects.all()
+        filter_value = self.request.query_params.get('username', None)
+        if filter_value is not None:
+            queryset =queryset.filter(username=filter_value)
+        return queryset
