@@ -608,8 +608,8 @@ def ReproduceSentenceEval(request, pk):
                     due_date=datetime.date.today()
                     )
             else:
-                PerformanceObj = PerformancePerExample.objects.get(example=example_inst,
-                                                           user=request.user)
+                PerformanceObj = PerformancePerExample.objects.get(
+                    example=example_inst, user=request.user)
             PerformanceObj.update_interval(average_score)
 
             # after update, determine which example is due next
@@ -638,7 +638,8 @@ def ReproduceSentenceEval(request, pk):
                 request.session['quiz_state'] += 1
             else:
                 request.session['quiz_state'] = 0
-            print(request.session['quiz_state'], request.session['quiz_counter'])
+            print(request.session['quiz_state'],
+                  request.session['quiz_counter'])
             request.session.modified = True
             return render(request,
                           'ruskeyverbs/answer_evaluation.html',
@@ -668,21 +669,12 @@ def QuizSummary(request, pk):
     else:
         raise Http404
 
+
 @api_view(['GET'])
 def GetUser(response, uname):
-    my_user = get_object_or_404(User, username=uname)
-    serializer = UserSerializer(my_user)
-    return Response(serializer.data)
-
-class UserViewSet(viewsets.ReadOnlyModelViewSet):
-    """
-    API endpoint that allows User instances to be viewed
-    """
-    serializer_class = UserSerializer
-    queryset = User.objects.all()
-    def get_queryset(self):
-        queryset = User.objects.all()
-        filter_value = self.request.query_params.get('username', None)
-        if filter_value is not None:
-            queryset =queryset.filter(username=filter_value)
-        return queryset
+    if User.objects.all().filter(username=uname).exists():
+        my_user = User.objects.get(username=uname)
+        serializer = UserSerializer(my_user)
+        return Response(serializer.data)
+    else:
+        return Response('null')

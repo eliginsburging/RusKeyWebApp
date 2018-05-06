@@ -11,7 +11,7 @@
 
           {{ field }}
           {% if field == form.username %}
-          extra
+          <span id='usermessage' style="font-weight:bold">[[warningmessage]]</span>
           {% endif %}
           {% if field.help_text %}
             <small style="display: none">{{ field.help_text }}</small>
@@ -32,14 +32,20 @@
     delimiters: ['[[', ']]'],
     el: '#istaken',
     data: {
-      name: ''
+      name: '',
+      warningmessage: ''
     },
     methods: {
       TestForUser: function() {
         axios.get("/userapi/"+this.name)
         .then(function(response) {
           if (response.data['username'] == vm.name) {
-              console.log('bad')
+              vm.$data['warningmessage'] = 'username already in use!';
+              document.getElementById('usermessage').style.color = 'red';
+
+            } else {
+              vm.$data['warningmessage'] = 'username available';
+              document.getElementById('usermessage').style.color = 'green';
             }
           })
         }
