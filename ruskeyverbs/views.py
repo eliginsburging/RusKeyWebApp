@@ -13,7 +13,6 @@ from django.template.loader import render_to_string
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.utils.encoding import force_bytes
 from django.core.mail import EmailMessage
-from rest_framework import viewsets
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from .serializers import UserSerializer
@@ -23,7 +22,6 @@ from .models import Verb, Example, PerformancePerExample
 from .tokens import account_activation_token
 from .forms import FillInTheBlankForm, ArrangeWordsForm, ReproduceSentenceForm, MultipleChoiceForm, UserForm
 import datetime
-import decimal
 import re
 
 stress_mark = chr(769)
