@@ -1,5 +1,8 @@
 {% extends "ruskeyverbs/quiz_box.html" %}
 {% block quiz_content %}
+<div id="vuecontent">
+
+
 {% if score == 100 %}
   <h2 class="correct">Exactly Correct!</h2>
 {% elif score > 90 %}
@@ -11,20 +14,43 @@
 <p>The correct answer is: <span class="bold">{{ answer }}</span></p>
 <p class="center">{{ russian_text }}</p>
 <h3>Score: {{ score }}</h3>
-{% if quiz_state == 1 %}
-  <a href="{% url 'fill-in-the-blank' pk %}" class="btn btn-primary float-right">Continue</a>
-{% elif quiz_state == 2 %}
-  <a href="{% url 'arrange-words' pk %}" class="btn btn-primary float-right">Continue</a>
-{% elif quiz_state == 3 %}
-  <a href="{% url 'reproduce-sentence' pk %}" class="btn btn-primary float-right">Continue</a>
-{% elif quiz_state == 4 and request.session.quiz_counter < 3 and not_studied %}
-  <a href="{% url 'study-session' pk %}" class="btn btn-primary float-right">Continue</a>
-{% elif quiz_state == 4 and request.session.quiz_counter < 3 %}
-  <a href="{% url 'multiple-choice' pk %}" class="btn btn-primary float-right">Continue</a>
-{% elif quiz_state == 4 and request.session.quiz_counter >= 3 %}
-  <a href="{% url 'quiz-summary' verb_pk %}" class="btn btn-primary float-right">End Quiz</a>
+{% if score <= 90 %}
+  <p>Retype the correct answer (with punctuation and capitalization):</p>
+  <input type="text" name="" v-model="userinbox" value="" v-on:keyup='CompareAns'></input>
 {% endif %}
+{% if quiz_state == 1 %}
+  <a id="next" href="{% url 'fill-in-the-blank' pk %}" class="btn btn-primary float-right {% if score <= 90 %}disabled{% endif %}">Continue</a>
+{% elif quiz_state == 2 %}
+  <a id="next" href="{% url 'arrange-words' pk %}" class="btn btn-primary float-right {% if score <= 90 %}disabled{% endif %}">Continue</a>
+{% elif quiz_state == 3 %}
+  <a id="next" href="{% url 'reproduce-sentence' pk %}" class="btn btn-primary float-right {% if score <= 90 %}disabled{% endif %}">Continue</a>
+{% elif quiz_state == 4 and request.session.quiz_counter < 3 and not_studied %}
+  <a id="next" href="{% url 'study-session' pk %}" class="btn btn-primary float-right {% if score <= 90 %}disabled{% endif %}">Continue</a>
+{% elif quiz_state == 4 and request.session.quiz_counter < 3 %}
+  <a id="next" href="{% url 'multiple-choice' pk %}" class="btn btn-primary float-right {% if score <= 90 %}disabled{% endif %}">Continue</a>
+{% elif quiz_state == 4 and request.session.quiz_counter >= 3 %}
+  <a id="next" href="{% url 'quiz-summary' verb_pk %}" class="btn btn-primary float-right {% if score <= 90 %}disabled{% endif %}">End Quiz</a>
+{% endif %}
+</div>
 <br>
 <br>
-
+<script type="text/javascript">
+  var vm = new Vue({
+    delimiters: ['[[', ']]'],
+    el: '#vuecontent',
+    data: {
+      answer: '{{ answer }}',
+      userinbox: ''
+    },
+        methods: {
+          CompareAns: function() {
+            if (vm.userinbox != vm.answer) {
+              document.getElementById('next').classList.add('disabled')
+            } else {
+              document.getElementById('next').classList.remove('disabled')
+        }
+      }
+    }
+  })
+</script>
 {% endblock %}

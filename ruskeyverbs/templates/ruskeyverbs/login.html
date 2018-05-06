@@ -2,7 +2,7 @@
 {% block message_content %}
 <h2>Login</h2>
 <br>
-<form class="" action="index.html" method="post">
+<form class="" action="{% url 'index' %}" method="post">
   {% csrf_token %}
   {% for field in form %}
   <p>{{ field.label_tag }}<br>

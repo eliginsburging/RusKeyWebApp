@@ -2,6 +2,7 @@ from django.shortcuts import render
 from django.http import HttpResponseRedirect, Http404
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
+from django.contrib.auth import login, authenticate
 from django.contrib.sites.shortcuts import get_current_site
 from django.contrib import messages
 from django.db.models import Min
@@ -319,7 +320,7 @@ def MultipleChoiceEval(request, pk):
                           context={'pk': pk,
                                    'score': score,
                                    'user_input': user_input,
-                                   'answer': example_inst.russian_text,
+                                   'answer': answer,
                                    'russian_text': example_inst.russian_text,
                                    'quiz_state': 1})
         else:
@@ -517,7 +518,7 @@ def ArrangeWordsEval(request, pk):
                           context={'pk': pk,
                                    'score': score,
                                    'user_input': user_input,
-                                   'answer': example_inst.russian_text,
+                                   'answer': example_inst.russian_text.replace(stress_mark, ''),
                                    'russian_text': example_inst.russian_text,
                                    'quiz_state': 3})
         else:
@@ -646,7 +647,7 @@ def ReproduceSentenceEval(request, pk):
                           context={'pk': pk,
                                    'score': score,
                                    'user_input': user_input,
-                                   'answer': answer,
+                                   'answer': example_inst.russian_text.replace(stress_mark, ''),
                                    'russian_text': example_inst.russian_text,
                                    'quiz_state': 4,
                                    'verb_pk': verb_pk,
