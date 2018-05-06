@@ -14,6 +14,7 @@ from django.utils.encoding import force_bytes
 from django.core.mail import EmailMessage
 from rest_framework import viewsets
 from rest_framework.response import Response
+from rest_framework.decorators import api_view
 from .serializers import UserSerializer
 from fuzzywuzzy import fuzz
 from random import shuffle, choices
@@ -667,6 +668,11 @@ def QuizSummary(request, pk):
     else:
         raise Http404
 
+@api_view(['GET'])
+def GetUser(response, uname):
+    my_user = get_object_or_404(User, username=uname)
+    serializer = UserSerializer(my_user)
+    return Response(serializer.data)
 
 class UserViewSet(viewsets.ReadOnlyModelViewSet):
     """

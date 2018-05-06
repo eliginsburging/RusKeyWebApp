@@ -1,11 +1,7 @@
 from django.contrib.auth import views as auth_views
 from . import views
 from django.urls import path, include
-from rest_framework import routers
-
-
-router = routers.DefaultRouter()
-router.register(r'users', views.UserViewSet)
+from rest_framework.urlpatterns import format_suffix_patterns
 
 urlpatterns = [
     path('', views.index, name='index'),
@@ -36,6 +32,5 @@ urlpatterns = [
     path('register/', views.SignUp, name='signup'),
     path('activate/<uidb64>/<token>/', views.activate, name='activate'),
     path('accounts/', include('django.contrib.auth.urls')),
-    path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
-    path('api/', include(router.urls))
+    path('userapi/<uname>/', views.GetUser, name='get-user'),
 ]

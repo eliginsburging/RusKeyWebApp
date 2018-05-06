@@ -3,7 +3,8 @@
 {% block extra_head_content %}
   {% load static %}
   <link rel="stylesheet" href="{% static "ruskeyverbs/css/quiz_styles.css" %}"/>
-
+  {% block even_more_head %}
+  {% endblock even_more_head %}
 {% endblock %}
 
 {% block content %}

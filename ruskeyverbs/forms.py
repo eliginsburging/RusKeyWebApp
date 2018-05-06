@@ -47,6 +47,9 @@ class ReproduceSentenceForm(forms.Form):
 
 
 class UserForm(UserCreationForm):
+    username = forms.CharField(max_length=20, help_text="Required",
+                               widget=forms.TextInput(
+                                  attrs={'v-on:change': 'TestForUser','v-model': 'name'}))
     email = forms.EmailField(max_length=200, help_text='Required')
 
     class Meta:
