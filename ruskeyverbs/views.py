@@ -172,12 +172,14 @@ def StudyPage(request, pk):
     example_inst = get_object_or_404(Example, pk=pk)
     russian_text_list = strip_punct_lower(example_inst.russian_text,
                                           stressed=True).split()
+
     """
     test each word of the sentence to see which one is a form of the verb
     being studied and determine which form it is
     """
     for word in russian_text_list:
-        if word in example_inst.verb.get_forms_list(stressed=True):
+        if (word in example_inst.verb.get_forms_list(stressed=True)
+            or word.capitalize() in example_inst.verb.get_forms_list(stressed=True)):
             target_verb = word
             target_verb_modified = "<b>" + word + "</b>"
     russian_text_bold = example_inst.russian_text.replace(target_verb,
@@ -273,6 +275,7 @@ def MultipleChoiceEval(request, pk):
     evaluation view for multiple choice fill in the blank
     """
     example_inst = get_object_or_404(Example, pk=pk)
+    verb_pk = example_inst.verb.pk
     russian_text_list = strip_punct_lower(example_inst.russian_text,
                                           stressed=False).split()
     """
@@ -316,6 +319,7 @@ def MultipleChoiceEval(request, pk):
             return render(request,
                           'ruskeyverbs/answer_evaluation.html',
                           context={'pk': pk,
+                                   'verb_pk': verb_pk,
                                    'score': score,
                                    'user_input': user_input,
                                    'answer': answer,
@@ -377,6 +381,7 @@ def FillInTheBlankEval(request, pk):
     if request.method != 'POST':
         raise Http404
     example_inst = get_object_or_404(Example, pk=pk)
+    verb_pk = example_inst.verb.pk
     """
     since the user is unable to type stress marks, we omit them in identifying
     the correct answer (the form which was omitted in the FillInTheBlank view)
@@ -415,6 +420,7 @@ def FillInTheBlankEval(request, pk):
                          'user_input': user_input,
                          'score': score,
                          'pk': pk,
+                         'verb_pk': verb_pk,
                          'quiz_state': 2})
         else:
             messages.warning(request,
@@ -480,6 +486,7 @@ def ArrangeWordsEval(request, pk):
     eval view for arrange words quiz
     """
     example_inst = get_object_or_404(Example, pk=pk)
+    verb_pk = example_inst.verb.pk
     """
     create a list of the words in the sentence, which will be used
     to bind the form
@@ -514,6 +521,7 @@ def ArrangeWordsEval(request, pk):
             return render(request,
                           'ruskeyverbs/answer_evaluation.html',
                           context={'pk': pk,
+                                   'verb_pk': verb_pk,
                                    'score': score,
                                    'user_input': user_input,
                                    'answer': example_inst.russian_text.replace(stress_mark, ''),
@@ -626,9 +634,9 @@ def ReproduceSentenceEval(request, pk):
             if PerformancePerExample.objects.filter(pk=pk,
                                                     user=request.user).exists():
 
-                not_studied = False
+                not_studied = 0
             else:
-                not_studied = True
+                not_studied = 1
             try:
                 request.session['quiz_counter'] += 1
             except KeyError:
@@ -670,7 +678,7 @@ def QuizSummary(request, pk):
 
 
 @api_view(['GET'])
-def GetUser(response, uname):
+def get_user(response, uname):
     if User.objects.all().filter(username=uname).exists():
         my_user = User.objects.get(username=uname)
         serializer = UserSerializer(my_user)

@@ -1,7 +1,7 @@
 {% extends "ruskeyverbs/message.html" %}
 {% block message_content %}
   <h2>Sign up</h2>
-  <div id='istaken'>
+  <div id='registration'>
     <form method="post">
       {% csrf_token %}
 
@@ -11,7 +11,7 @@
 
           {{ field }}
           {% if field == form.username %}
-          <span id='usermessage' style="font-weight:bold">[[warningmessage]]</span>
+          <span id='usermessage' v-bind:style="messagestyle">[[warningmessage]]</span>
           {% endif %}
           {% if field.help_text %}
             <small style="display: none">{{ field.help_text }}</small>
@@ -28,10 +28,11 @@
   <script>
   var vm = new Vue({
     delimiters: ['[[', ']]'],
-    el: '#istaken',
+    el: '#registration',
     data: {
       name: '',
-      warningmessage: ''
+      warningmessage: '',
+      messagestyle: 'font-weight:bold'
     },
     methods: {
       TestForUser: function() {
@@ -39,11 +40,11 @@
         .then(function(response) {
           if (response.data['username'] == vm.name) {
               vm.$data['warningmessage'] = 'username already in use!';
-              document.getElementById('usermessage').style.color = 'red';
+              vm.$data['messagestyle'] = 'font-weight:bold;color:red';
 
             } else {
               vm.$data['warningmessage'] = 'username available';
-              document.getElementById('usermessage').style.color = 'green';
+              vm.$data['messagestyle'] = 'font-weight:bold;color:green';
             }
           })
         }

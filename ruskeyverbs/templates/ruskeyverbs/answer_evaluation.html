@@ -18,36 +18,44 @@
   <p>Retype the correct answer (with punctuation and capitalization):</p>
   <input type="text" name="" v-model="userinbox" value="" v-on:keyup='CompareAns'></input>
 {% endif %}
-{% if quiz_state == 1 %}
-  <a id="next" href="{% url 'fill-in-the-blank' pk %}" class="btn btn-primary float-right {% if score <= 90 %}disabled{% endif %}">Continue</a>
-{% elif quiz_state == 2 %}
-  <a id="next" href="{% url 'arrange-words' pk %}" class="btn btn-primary float-right {% if score <= 90 %}disabled{% endif %}">Continue</a>
-{% elif quiz_state == 3 %}
-  <a id="next" href="{% url 'reproduce-sentence' pk %}" class="btn btn-primary float-right {% if score <= 90 %}disabled{% endif %}">Continue</a>
-{% elif quiz_state == 4 and request.session.quiz_counter < 3 and not_studied %}
-  <a id="next" href="{% url 'study-session' pk %}" class="btn btn-primary float-right {% if score <= 90 %}disabled{% endif %}">Continue</a>
-{% elif quiz_state == 4 and request.session.quiz_counter < 3 %}
-  <a id="next" href="{% url 'multiple-choice' pk %}" class="btn btn-primary float-right {% if score <= 90 %}disabled{% endif %}">Continue</a>
-{% elif quiz_state == 4 and request.session.quiz_counter >= 3 %}
-  <a id="next" href="{% url 'quiz-summary' verb_pk %}" class="btn btn-primary float-right {% if score <= 90 %}disabled{% endif %}">End Quiz</a>
-{% endif %}
+  <a id="next" v-bind:href="GetURL" class="btn btn-primary float-right {% if score <= 90 %}disabled{% endif %}">Continue</a>
 </div>
 <br>
 <br>
 <script type="text/javascript">
+  var qstate = {{ quiz_state }}
+  var qcounter = {{ request.session.quiz_counter }}
+  var qnotstudied = {{ not_studied|default:1 }}
   var vm = new Vue({
     delimiters: ['[[', ']]'],
     el: '#vuecontent',
     data: {
       answer: '{{ answer }}',
-      userinbox: ''
+      userinbox: '',
     },
-        methods: {
-          CompareAns: function() {
-            if (vm.userinbox != vm.answer) {
-              document.getElementById('next').classList.add('disabled')
-            } else {
-              document.getElementById('next').classList.remove('disabled')
+    computed: {
+      GetURL: function() {
+        if (qstate == 1) {
+          return "{% url 'fill-in-the-blank' pk %}"
+        } else if (qstate == 2) {
+          return "{% url 'arrange-words' pk %}"
+        } else if (qstate == 3) {
+          return "{% url 'reproduce-sentence' pk %}"
+        } else if (qstate == 4 && qcounter < 3 && qnotstudied > 0) {
+          return "{% url 'study-session' pk %}"
+        } else if (qstate == 4 && qcounter < 3) {
+          return "{% url 'multiple-choice' pk %}"
+        } else {
+          return "{% url 'quiz-summary' verb_pk %}"
+        }
+      }
+    },
+    methods: {
+      CompareAns: function() {
+        if (vm.userinbox != vm.answer) {
+          document.getElementById('next').classList.add('disabled')
+        } else {
+          document.getElementById('next').classList.remove('disabled')
         }
       }
     }
