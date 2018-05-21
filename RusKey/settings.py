@@ -36,6 +36,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'rest_framework'
 ]
 
 MIDDLEWARE = [
@@ -120,5 +121,5 @@ STATIC_URL = '/static/'
 
 LOGIN_REDIRECT_URL = '/verbs/'
 
-#for testing - remove next line in production
+# for testing - remove next line in production
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'

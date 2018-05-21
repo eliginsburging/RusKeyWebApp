@@ -1,0 +1,24 @@
+{% extends "ruskeyverbs/base_generic.html" %}
+
+{% block extra_head_content %}
+  {% load static %}
+  <link rel="stylesheet" href="{% static "ruskeyverbs/css/quiz_styles.css" %}"/>
+  {% block even_more_head %}
+  {% endblock even_more_head %}
+{% endblock %}
+
+{% block content %}
+
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-xs-12 col-md-6">
+        <br>
+        <div class="message-box">
+          {% block message_content %}
+          {% endblock %}
+        </div>
+      </div>
+    </div>
+
+  </div>
+{% endblock %}

@@ -1,0 +1,54 @@
+{% extends "ruskeyverbs/message.html" %}
+{% block message_content %}
+  <h2>Sign up</h2>
+  <div id='registration'>
+    <form method="post">
+      {% csrf_token %}
+
+        {% for field in form %}
+        <p>
+          {{ field.label_tag }}<br>
+
+          {{ field }}
+          {% if field == form.username %}
+          <span id='usermessage' v-bind:style="messagestyle">[[warningmessage]]</span>
+          {% endif %}
+          {% if field.help_text %}
+            <small style="display: none">{{ field.help_text }}</small>
+          {% endif %}
+          {% for error in field.errors %}
+            <p style="color: red">{{ error }}</p>
+          {% endfor %}
+        </p>
+        {% endfor %}
+      <button type="submit">Sign up</button>
+
+    </form>
+  </div>
+  <script>
+  var vm = new Vue({
+    delimiters: ['[[', ']]'],
+    el: '#registration',
+    data: {
+      name: '',
+      warningmessage: '',
+      messagestyle: 'font-weight:bold'
+    },
+    methods: {
+      TestForUser: function() {
+        axios.get("/userapi/"+this.name)
+        .then(function(response) {
+          if (response.data['username'] == vm.name) {
+              vm.$data['warningmessage'] = 'username already in use!';
+              vm.$data['messagestyle'] = 'font-weight:bold;color:red';
+
+            } else {
+              vm.$data['warningmessage'] = 'username available';
+              vm.$data['messagestyle'] = 'font-weight:bold;color:green';
+            }
+          })
+        }
+      }
+    })
+  </script>
+{% endblock %}

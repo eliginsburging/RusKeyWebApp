@@ -1,0 +1,13 @@
+{% extends "ruskeyverbs/message.html" %}
+{% block message_content %}
+
+{% if success %}
+<h2>Success!</h2>
+<p>Your account activation was successful. You can now <a href="{% url 'login' %}">login</a>
+to your account.</p>
+{% else %}
+<h2>Something Went Wrong</h2>
+<p>Your account activation link was invalid.</p>
+{% endif %}
+
+{% endblock %}

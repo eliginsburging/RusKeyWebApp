@@ -1,6 +1,7 @@
-from django.urls import path, include
-
+from django.contrib.auth import views as auth_views
 from . import views
+from django.urls import path, include
+from rest_framework.urlpatterns import format_suffix_patterns
 
 urlpatterns = [
     path('', views.index, name='index'),
@@ -26,5 +27,12 @@ urlpatterns = [
          name='reproduce-sentence-eval'),
     path('verb/<int:pk>/quizsummary', views.QuizSummary,
          name='quiz-summary'),
+    path('accounts/login/', auth_views.login,
+         {'template_name': 'ruskeyverbs/login.html'}, name='login'),
+    path('accounts/logout/', auth_views.logout,
+         {'template_name': 'ruskeyverbs/logout.html'}, name='logout'),
+    path('register/', views.SignUp, name='signup'),
+    path('activate/<uidb64>/<token>/', views.activate, name='activate'),
     path('accounts/', include('django.contrib.auth.urls')),
+    path('userapi/<uname>/', views.get_user, name='get-user'),
 ]
