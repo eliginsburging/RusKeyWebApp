@@ -10,7 +10,6 @@ import decimal
 
 stress_mark = chr(769)
 
-
 class Verb(models.Model):
     infinitive = models.CharField(max_length=30)
     trans_infinitive = models.CharField('transliterated inifinitve',
@@ -52,6 +51,9 @@ class Verb(models.Model):
             examples = PerformancePerExample.objects.filter(
                 user=my_user, example__verb=self).aggregate(Min('due_date'))
             return examples['due_date__min']
+
+    def is_overdue(self, my_user):
+        return self.get_earliest_due_date(my_user) < datetime.date.today()
 
     def get_forms_list(self, stressed=True, random=False):
         stressed_list = [self.infinitive,
