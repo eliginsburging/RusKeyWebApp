@@ -10,6 +10,7 @@ import decimal
 
 stress_mark = chr(769)
 
+
 class Verb(models.Model):
     infinitive = models.CharField(max_length=30)
     trans_infinitive = models.CharField('transliterated inifinitve',
@@ -37,15 +38,20 @@ class Verb(models.Model):
         return word.replace(stress_mark, '')
 
     def get_earliest_due_date(self, my_user):
-        examples = PerformancePerExample.objects.filter(user=my_user, example__verb=self).aggregate(Min('due_date'))
-        future_date = datetime.date.today() + datetime.timedelta(weeks=9999)
-        if examples['due_date__min'] is None:
-            return future_date
+        example_count = PerformancePerExample.objects.filter(
+            user=my_user, example__verb=self).count()
+        # if the user hasn't studied any of the examples, return a far out date
+        if example_count == 0:
+            return datetime.date.today() + datetime.timedelta(weeks=9999)
+        # if only one performance data point, return the due date for it
+        elif example_count == 1:
+            return PerformancePerExample.objects.get(
+                user=my_user, example__verb=self).due_date
+        # otherwise aggregate the minimum due date
         else:
+            examples = PerformancePerExample.objects.filter(
+                user=my_user, example__verb=self).aggregate(Min('due_date'))
             return examples['due_date__min']
-
-    def is_overdue(self, my_user):
-        return self.get_earliest_due_date(my_user) < datetime.date.today()
 
     def get_forms_list(self, stressed=True, random=False):
         stressed_list = [self.infinitive,
