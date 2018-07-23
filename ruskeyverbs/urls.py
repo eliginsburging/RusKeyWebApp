@@ -1,6 +1,7 @@
 from django.contrib.auth import views as auth_views
 from . import views
 from django.urls import path, include
+from django.conf import settings
 from rest_framework.urlpatterns import format_suffix_patterns
 
 urlpatterns = [
@@ -31,8 +32,8 @@ urlpatterns = [
          {'template_name': 'ruskeyverbs/login.html'}, name='login'),
     path('accounts/logout/', auth_views.logout,
          {'template_name': 'ruskeyverbs/logout.html'}, name='logout'),
-    path('register/', views.SignUp, name='signup'),
-    path('activate/<uidb64>/<token>/', views.activate, name='activate'),
+    # path('register/', views.SignUp, name='signup'),
+    # path('activate/<uidb64>/<token>/', views.activate, name='activate'),
     path('accounts/', include('django.contrib.auth.urls')),
     path('userapi/<uname>/', views.get_user, name='get-user'),
 ]

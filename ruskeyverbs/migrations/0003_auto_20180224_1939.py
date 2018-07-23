@@ -30,9 +30,9 @@ class verbclass(object):
             self.verbAudioList = []
             for i in range(16,len(self.verbFileLinesList)-1,2):
                 self.examplesList.append(
-                    self.verbFileLinesList[i].replace(u'\n',''))
+                    self.verbFileLinesList[i].replace(u'\n', ''))
                 self.examplesListTranslations.append(
-                    self.verbFileLinesList[i+1].replace(u'\n',''))
+                    self.verbFileLinesList[i+1].replace(u'\n', ''))
             for i in range(len(self.examplesList)):
                 audioFileName = ('./verbAudio/'
                                  + verbFileName[:-4]
@@ -41,7 +41,7 @@ class verbclass(object):
                 self.verbAudioList.append(audioFileName)
             self.verbAudioList.append('./verbAudio/'
                                       + verbFileName[:-4]+'.mp3')
-            #append conjugation audio last so that indexes for examples line up
+            # append conjugation audio last so that indexes for examples line up
 
             self.transliterateDict = {'а': 'a',
                                       'б': 'b',

@@ -7,8 +7,8 @@ be
 бу́дет
 бу́дем
 бу́дете
-будут
-бу́дь
+бу́дут
+будь
 бу́дьте
 был
 была́
@@ -23,7 +23,7 @@ He was admitted to college.
 Я зна́ю, что Том был прав.
 I know that Tom was right.
 Я ду́мала, что ты была́ на свида́нии.
-I thought you (sg) had a date. (female speaker)
+I thought you (sg) (fem) had a date. (female speaker)
 Том был без боти́нок.
 Tom didn't have shoes on.
 Я была́ с ним че́стной.

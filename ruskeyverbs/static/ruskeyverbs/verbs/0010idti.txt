@@ -11,9 +11,9 @@ start, leave, come, come out, go, stretch, fall, proceed, go on, enter, become, 
 иди́
 иди́те
 шёл
-шла́
-шло́
-шли́
+шла
+шло
+шли
 Иди́те и помоги́те ей.
 Go (pl) and help her.
 Вчера́ весь день вре́мя от вре́мени шёл дождь.
