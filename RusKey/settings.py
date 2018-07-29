@@ -37,16 +37,16 @@ AWS_S3_CUSTOM_DOMAIN = f"s3.us-east-2.amazonaws.com/{AWS_STORAGE_BUCKET_NAME}"
 # Database
 # https://docs.djangoproject.com/en/2.0/ref/settings/#databases
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-#         'NAME': os.environ.get('ruskey_db', ''),
-#         'USER': os.environ.get('postgres_user_ruskey', ''),
-#         'PASSWORD': os.environ.get('postgres_pw_ruskey', ''),
-#         'HOST': 'localhost',
-#         'PORT': '5432',
-#     }
-# }
+DATABASES = {
+    # 'default': {
+    #     'ENGINE': 'django.db.backends.postgresql_psycopg2',
+    #     'NAME': os.environ.get('ruskey_db', ''),
+    #     'USER': os.environ.get('postgres_user_ruskey', ''),
+    #     'PASSWORD': os.environ.get('postgres_pw_ruskey', ''),
+    #     'HOST': 'localhost',
+    #     'PORT': '5432',
+    # }
+}
 db_from_env = dj_database_url.config(conn_max_age=500)
 DATABASES['default'].update(db_from_env)
 
