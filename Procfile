@@ -1,1 +1,1 @@
-web: gunicorn RusKey.wsgi --log-file -
+web: gunicorn RusKey.wsgi
