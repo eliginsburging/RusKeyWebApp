@@ -24,7 +24,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = ['.horkuapp.com']
+ALLOWED_HOSTS = ['.herokuapp.com', '127.0.0.1']
 
 SECRET_KEY = os.environ.get('django_secretkey', '')
 AWS_ACCESS_KEY_ID = os.environ.get('AWS_access_keyid_ruskey', '')
@@ -155,4 +155,4 @@ ADMIN_MEDIA_PREFIX = STATIC_URL + 'admin/'
 # )
 
 # Activate Django-Heroku.
-django_heroku.settings(locals())
+# django_heroku.settings(locals())
