@@ -5,3 +5,4 @@ gunicorn
 django-storages
 psycopg2
 django-heroku
+dj-database-url
