@@ -10,7 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/2.0/ref/settings/
 """
 
-import os
+import os, django-heroku
 # from RusKey.settings_secret import *
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
@@ -152,3 +152,6 @@ ADMIN_MEDIA_PREFIX = STATIC_URL + 'admin/'
 #     ‘django.contrib.staticfiles.finders.FileSystemFinder’,
 #     ‘django.contrib.staticfiles.finders.AppDirectoriesFinder’,
 # )
+
+# Activate Django-Heroku.
+django_heroku.settings(locals())
