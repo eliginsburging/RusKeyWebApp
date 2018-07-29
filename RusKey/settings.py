@@ -11,7 +11,7 @@ https://docs.djangoproject.com/en/2.0/ref/settings/
 """
 
 import os
-from RusKey.settings_secret import *
+# from RusKey.settings_secret import *
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -24,6 +24,29 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 DEBUG = True
 
 ALLOWED_HOSTS = []
+
+SECRET_KEY = os.environ.get('django_secretkey', '')
+AWS_ACCESS_KEY_ID = os.environ.get('AWS_access_keyid_ruskey', '')
+AWS_SECRET_ACCESS_KEY = os.environ.get('AWS_secret_accesskey_ruskey', '')
+AWS_STORAGE_BUCKET_NAME = os.environ.get('ruskey_bucket', '')
+
+AWS_QUERYSTRING_AUTH = False
+AWS_S3_CUSTOM_DOMAIN = f"s3.us-east-2.amazonaws.com/{AWS_STORAGE_BUCKET_NAME}"
+# Database
+# https://docs.djangoproject.com/en/2.0/ref/settings/#databases
+
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': os.environ.get('ruskey_db', ''),
+        'USER': os.environ.get('postgres_user_ruskey', ''),
+        'PASSWORD': os.environ.get('postgres_pw_ruskey', ''),
+        'HOST': 'localhost',
+        'PORT': '5432',
+    }
+}
+
+
 
 
 # Application definition
@@ -71,15 +94,7 @@ TEMPLATES = [
 WSGI_APPLICATION = 'RusKey.wsgi.application'
 
 
-# Database
-# https://docs.djangoproject.com/en/2.0/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-    }
-}
 
 
 # Password validation

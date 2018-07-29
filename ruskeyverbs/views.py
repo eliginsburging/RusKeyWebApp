@@ -112,7 +112,7 @@ def VerbListPerUser(request):
             filter=Q(
                 example__performanceperexample__user_id=request.user.pk)
             )
-        ).order_by(F('due').asc(nulls_last=True))
+        ).order_by(F('due'), 'pk')
     sorted_verb_list = list(verbs_with_due_dates)
     return render(
         request,

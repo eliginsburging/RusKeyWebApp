@@ -34,13 +34,11 @@ class verbclass(object):
                 self.examplesListTranslations.append(
                     self.verbFileLinesList[i+1].replace(u'\n', ''))
             for i in range(len(self.examplesList)):
-                audioFileName = ('./verbAudio/'
-                                 + verbFileName[:-4]
+                audioFileName = (verbFileName[:-4]
                                  + str(i)
                                  + '.mp3')
                 self.verbAudioList.append(audioFileName)
-            self.verbAudioList.append('./verbAudio/'
-                                      + verbFileName[:-4]+'.mp3')
+            self.verbAudioList.append(verbFileName[:-4]+'.mp3')
             # append conjugation audio last so that indexes for examples line up
 
             self.transliterateDict = {'а': 'a',
@@ -97,6 +95,8 @@ def load_data(apps, schema_editor):
     example_model_dict = {}
     for file in file_list:
         currentVerb = verbclass(file)
+        print(f"adding {verb_count} - {currentVerb.infinitive}")
+        print("=" * 30)
         verb_model_dict[str(verb_count)] = Verb(infinitive=currentVerb.infinitive,
                                                 trans_infinitive=currentVerb.transliterate(),
                                                 aspect=currentVerb.aspect,
