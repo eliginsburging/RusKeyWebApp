@@ -11,7 +11,7 @@ https://docs.djangoproject.com/en/2.0/ref/settings/
 """
 
 import os
-import django-heroku
+import django_heroku
 # from RusKey.settings_secret import *
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
