@@ -3,3 +3,4 @@ fuzzywuzzy==0.16.0
 djangorestframework==3.8.2
 gunicorn
 django-storages
+psycopg2
