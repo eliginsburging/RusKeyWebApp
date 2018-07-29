@@ -21,9 +21,9 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/2.0/howto/deployment/checklist/
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['.horkuapp.com']
 
 SECRET_KEY = os.environ.get('django_secretkey', '')
 AWS_ACCESS_KEY_ID = os.environ.get('AWS_access_keyid_ruskey', '')
