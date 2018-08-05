@@ -128,19 +128,19 @@ def VerbDetails(request, pk):
     for user
     """
     verb = Verb.objects.get(pk=pk)
-    example_pk = Example.objects.annotate(
+    example_pk = Example.objects.filter(verb=verb).annotate(
         due=Min('performanceperexample__due_date',
                 filter=Q(
                     performanceperexample__user_id=request.user.pk)
                 )
-        ).filter(verb=verb).order_by('due')[0].pk
+        ).order_by(F('due').asc(nulls_first=True))[0].pk
     """
     If the user has previously studied the example, send them right
     into the quiz; otherwise, send them to the study page before the
     quiz
     """
-    if PerformancePerExample.objects.filter(pk=example_pk,
-                                            user=request.user).exists():
+    if PerformancePerExample.objects.filter(example=Example.objects.get(
+        pk=example_pk), user=request.user).exists():
         not_studied = False
     else:
         not_studied = True
