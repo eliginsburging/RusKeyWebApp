@@ -625,7 +625,8 @@ def ReproduceSentenceEval(request, pk):
                         filter=Q(
                             performanceperexample__user_id=request.user.pk)
                         )
-                ).filter(verb=verb).order_by('due')[0].pk
+                ).filter(verb=verb).order_by(
+                    F('due').asc(nulls_first=True))[0].pk
             """
             If the user has previously studied the next example, send them right
             into the quiz; otherwise, send them to the study page before the
