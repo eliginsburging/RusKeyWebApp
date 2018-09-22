@@ -7,7 +7,7 @@
 <form class="" action="{% url 'reproduce-sentence-eval' pk=pk%}" method="post" autocomplete="off">
   {% csrf_token %}
   {% with 'ruskeyverbs/verbAudio/'|add:file as file %}
-  <audio controls autoplay>
+  <audio controls>
     <source src="{% static file %}" type="audio/mpeg"></source>
   </audio>
   {% endwith %}

@@ -6,7 +6,7 @@
         <form class="" action="{% url 'arrange-words-eval' pk=pk%}" method="post">
           {% csrf_token %}
           {% with 'ruskeyverbs/verbAudio/'|add:file as file %}
-          <audio controls autoplay>
+          <audio controls>
             <source src="{% static file %}" type="audio/mpeg"></source>
           </audio>
           {% endwith %}

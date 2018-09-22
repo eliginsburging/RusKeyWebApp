@@ -7,7 +7,7 @@
 meaning: {{ english_text }}
 <hr>
 {% with 'ruskeyverbs/verbAudio/'|add:file as file %}
-<audio controls autoplay>
+<audio controls>
   <source src="{% static file %}" type="audio/mpeg"></source>
 </audio>
 {% endwith %}
