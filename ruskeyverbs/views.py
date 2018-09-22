@@ -17,7 +17,7 @@ from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from .serializers import UserSerializer
 from fuzzywuzzy import fuzz
-from random import shuffle, choices
+from random import shuffle, choices, randint
 from .models import Verb, Example, PerformancePerExample
 from .tokens import account_activation_token
 from .forms import FillInTheBlankForm, ArrangeWordsForm, ReproduceSentenceForm, MultipleChoiceForm, UserForm
@@ -239,7 +239,6 @@ def MultipleChoice(request, pk):
         rand_range = (list(range(1, example_inst.verb.pk))
                       + list(range(example_inst.verb.pk + 1, num_verbs + 1)))
     choice_pks += choices(rand_range, k=3)
-    shuffle(choice_pks)
     request.session['mcchoices'] = choice_pks
     request.session['target_field'] = target_field.name
     choice_list = []  # list of tuples that will be passed to the form
@@ -248,7 +247,11 @@ def MultipleChoice(request, pk):
     for verb_inst in verb_choices:
         verb_choice = getattr(verb_inst, target_field.name).replace(
             stress_mark, '')
-        choice_list.append((verb_choice, verb_choice))
+        rand_int = randint(0, 1)
+        if len(choice_list) == 0:
+            choice_list.append((verb_choice, verb_choice))
+        else:
+            choice_list.insert(rand_int, (verb_choice, verb_choice))
     quiz_text = example_inst.russian_text.replace(stressed_answer,
                                                   '___________')
     quiz_text = quiz_text.replace(stressed_answer.capitalize(),
