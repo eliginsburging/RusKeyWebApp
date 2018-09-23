@@ -43,3 +43,15 @@ hr {
   font-weight: bold;
   border: 1px solid black;
 }
+
+.quiz_text {
+  background-color: #0099ff;
+  padding: 4px;
+  text-align: center;
+}
+
+.english_text {
+  padding: 4px;
+  text-align: center;
+  font-size: 1.3em;
+}

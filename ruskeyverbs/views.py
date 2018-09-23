@@ -327,6 +327,7 @@ def MultipleChoiceEval(request, pk):
                                    'user_input': user_input,
                                    'answer': answer,
                                    'russian_text': example_inst.russian_text,
+                                   'file': example_inst.example_audio,
                                    'quiz_state': 1})
         else:
             print(form.errors)
@@ -424,6 +425,7 @@ def FillInTheBlankEval(request, pk):
                          'score': score,
                          'pk': pk,
                          'verb_pk': verb_pk,
+                         'file': example_inst.example_audio,
                          'quiz_state': 2})
         else:
             messages.warning(request,
@@ -529,6 +531,7 @@ def ArrangeWordsEval(request, pk):
                                    'user_input': user_input,
                                    'answer': example_inst.russian_text.replace(stress_mark, ''),
                                    'russian_text': example_inst.russian_text,
+                                   'file': example_inst.example_audio,
                                    'quiz_state': 3})
         else:
             messages.warning(request,
@@ -661,6 +664,7 @@ def ReproduceSentenceEval(request, pk):
                                    'russian_text': example_inst.russian_text,
                                    'quiz_state': 4,
                                    'verb_pk': verb_pk,
+                                   'file': example_inst.example_audio,
                                    'not_studied': not_studied})
         else:
             messages.warning(request,

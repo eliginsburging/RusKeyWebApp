@@ -3,7 +3,11 @@
 
 {% block quiz_content %}
 <h2>Type the Sentence</h2>
-<p>Type the russian sentence meaning "{{ english_text }}"</p>
+<p>Type the russian sentence meaning:</p>
+<br>
+<div class="english_text">
+  {{ english_text }}
+</div>
 <form class="" action="{% url 'reproduce-sentence-eval' pk=pk%}" method="post" autocomplete="off">
   {% csrf_token %}
   {% with 'ruskeyverbs/verbAudio/'|add:file as file %}

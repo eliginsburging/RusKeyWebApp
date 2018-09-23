@@ -1,5 +1,6 @@
 {% extends "ruskeyverbs/quiz_box.html" %}
 {% block quiz_content %}
+{% load static %}
 <div id="vuecontent">
 
 
@@ -10,9 +11,22 @@
 {% else %}
   <h2 class="incorrect">Incorrect</h2>
 {% endif %}
-<p>You entered: <span class="bold {% if score <= 90 %}text-danger{% else %}correctanswer{% endif %}">{{ user_input }}</span></p>
-<p>The correct answer is: <span class="bold">{{ answer }}</span></p>
-<p class="center">{{ russian_text }}</p>
+<div class="english_text">
+  <p>You entered: <span class="bold {% if score <= 90 %}text-danger{% else %}correctanswer{% endif %}">{{ user_input }}</span></p>
+</div>
+<div class="english_text">
+  <p>The correct answer is: <span class="bold">{{ answer }}</span></p>
+</div>
+<hr>
+<div class="quiz_text">
+  <p class="center">{{ russian_text }}</p>
+</div>
+<hr>
+{% with 'ruskeyverbs/verbAudio/'|add:file as file %}
+<audio controls autoplay>
+  <source src="{% static file %}" type="audio/mpeg"></source>
+</audio>
+{% endwith %}
 <h3>Score: {{ score }}</h3>
 {% if score <= 90 %}
   <p>Retype the correct answer (with punctuation and capitalization):</p>

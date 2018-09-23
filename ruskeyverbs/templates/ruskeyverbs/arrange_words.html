@@ -2,7 +2,11 @@
 {% load static %}
 {% block quiz_content %}
         <h2>Arrange the Words</h2>
-        <p>Arrange the words in the Russian sentence meaning "{{ english_text }}"</p>
+        <p>Arrange the words in the Russian sentence meaning:</p>
+          <br>
+          <div class="english_text">
+            {{ english_text }}
+          </div>
         <form class="" action="{% url 'arrange-words-eval' pk=pk%}" method="post">
           {% csrf_token %}
           {% with 'ruskeyverbs/verbAudio/'|add:file as file %}

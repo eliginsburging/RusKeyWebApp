@@ -2,9 +2,13 @@
 {% block quiz_content %}
 {% load static %}
 <h2>Multiple Choice Fill in the Blank</h2>
-{{ quiz_text }}
-<br>
-meaning: {{ english_text }}
+<div class="quiz_text">
+  {{ quiz_text }}
+</div>
+<hr>
+<div class="english_text">
+  {{ english_text }}
+</div>
 <hr>
 {% with 'ruskeyverbs/verbAudio/'|add:file as file %}
 <audio controls>

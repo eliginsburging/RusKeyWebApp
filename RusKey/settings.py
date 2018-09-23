@@ -140,6 +140,8 @@ STATIC_URL = '/static/'
 
 LOGIN_REDIRECT_URL = '/verbs/'
 
+AWS_DEFAULT_ACL = None
+
 # for testing - remove next line in production
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
