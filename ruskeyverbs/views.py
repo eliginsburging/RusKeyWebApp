@@ -23,6 +23,9 @@ from .tokens import account_activation_token
 from .forms import FillInTheBlankForm, ArrangeWordsForm, ReproduceSentenceForm, MultipleChoiceForm, UserForm
 import datetime
 import re
+import sendgrid
+import os
+from sendgrid.helpers.mail import *
 
 stress_mark = chr(769)
 
@@ -43,9 +46,24 @@ def SignUp(request):
     if request.method == 'POST':
         form = UserForm(request.POST)
         if form.is_valid():
+            email = form.cleaned_data.get('email')
+            if User.objects.filter(email=email).exists():
+                form = UserForm()
+                message = "Only one account per email please."
+                return render(request, 'ruskeyverbs/signup.html',
+                              {'form': form,
+                               'message': message,})
             user = form.save(commit=False)
             user.is_active = False
             user.save()
+            # FROM heroku guidance on sendgrid:
+            # sg = sendgrid.SendGridAPIClient(apikey=os.environ.get('SENDGRID_API_KEY'))
+            # from_email = Email("test@example.com")
+            # subject = "Hello World from the SendGrid Python Library!"
+            # to_email = Email("test@example.com")
+            # content = Content("text/plain", "Hello, Email!")
+            # mail = Mail(from_email, subject, to_email, content)
+            # response = sg.client.mail.send.post(request_body=mail.get())
             current_site = get_current_site(request)
             mail_subject = 'Activate Your RusKey Account'
             message = render_to_string('ruskeyverbs/account_activation_email.html', {
@@ -54,11 +72,17 @@ def SignUp(request):
                 'uid': urlsafe_base64_encode(force_bytes(user.pk)).decode(),
                 'token': account_activation_token.make_token(user),
             })
-            to_email = form.cleaned_data.get('email')
-            email = EmailMessage(
-                mail_subject, message, to=[to_email]
-            )
-            email.send()
+            sg = sendgrid.SendGridAPIClient(apikey=os.environ.get('SENDGRID_API_KEY'))
+            from_email = Email("administrator@ruskeywebapp.herokuapp.com")
+            to_email = Email(form.cleaned_data.get('email'))
+            content = Content("text/plain", message)
+            mail = Mail(from_email, mail_subject, to_email, content)
+            response = sg.client.mail.send.post(request_body=mail.get())
+            # to_email = form.cleaned_data.get('email')
+            # email = EmailMessage(
+            #     mail_subject, message, to=[to_email]
+            # )
+            # email.send()
             return render(request, 'ruskeyverbs/registration_landing.html', {
                 'user': user,
                 'email': user.email
