@@ -430,7 +430,7 @@ def FillInTheBlankEval(request, pk):
             do a fuzzy string comparison of the user's input to the expected
             answer identified above
             """
-            score = fuzz.ratio(user_input, answer)
+            score = fuzz.ratio(user_input.lower(), answer)
             request.session['current_score'].append(score)
             # increment the progress bar if mid-quiz; initialize it otherwise
             request.session['progress'] += round(1/12, 3)*100
